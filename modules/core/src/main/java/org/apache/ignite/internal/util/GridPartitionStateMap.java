@@ -17,6 +17,7 @@
 
 package org.apache.ignite.internal.util;
 
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.BitSet;
@@ -32,12 +33,15 @@ import org.apache.ignite.plugin.extensions.communication.Message;
  * <p>
  * Null values are prohibited.
  */
-public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartitionState> implements Message {
+public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartitionState> implements Serializable, Message {
     /** Empty map. */
     public static final GridPartitionStateMap EMPTY = new GridPartitionStateMap(0);
 
     /** Type code. */
     public static final short TYPE_CODE = 515;
+
+    /** */
+    private static final long serialVersionUID = 0L;
 
     /** Required bits to hold all state. Additional zero state is required as well. */
     private static final int BITS = Integer.SIZE -
