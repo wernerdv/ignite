@@ -64,8 +64,8 @@ import org.apache.ignite.internal.codegen.GridDhtPartitionDemandMessageSerialize
 import org.apache.ignite.internal.codegen.GridDhtPartitionExchangeIdSerializer;
 import org.apache.ignite.internal.codegen.GridDhtPartitionFullMapSerializer;
 import org.apache.ignite.internal.codegen.GridDhtPartitionMapSerializer;
-import org.apache.ignite.internal.codegen.GridDhtPartitionsFullMessageSerializer;
 import org.apache.ignite.internal.codegen.GridDhtPartitionSupplyMessageSerializer;
+import org.apache.ignite.internal.codegen.GridDhtPartitionsFullMessageSerializer;
 import org.apache.ignite.internal.codegen.GridDhtPartitionsSingleRequestSerializer;
 import org.apache.ignite.internal.codegen.GridDhtTxFinishRequestSerializer;
 import org.apache.ignite.internal.codegen.GridDhtTxFinishResponseSerializer;
