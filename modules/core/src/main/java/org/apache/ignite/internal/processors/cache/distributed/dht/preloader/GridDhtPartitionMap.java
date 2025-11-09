@@ -41,7 +41,7 @@ import static org.apache.ignite.internal.processors.cache.distributed.dht.topolo
  */
 public class GridDhtPartitionMap implements Comparable<GridDhtPartitionMap>, Externalizable, Message {
     /** Type code. */
-    public static final short TYPE_CODE = 516;
+    public static final short TYPE_CODE = 517;
 
     /** */
     private static final long serialVersionUID = 0L;
@@ -63,7 +63,6 @@ public class GridDhtPartitionMap implements Comparable<GridDhtPartitionMap>, Ext
     protected GridPartitionStateMap map;
 
     /** */
-    @Order(4)
     private volatile int moving;
 
     /** */
@@ -279,20 +278,6 @@ public class GridDhtPartitionMap implements Comparable<GridDhtPartitionMap>, Ext
      */
     public void topologyVersion(AffinityTopologyVersion top) {
         this.top = top;
-    }
-
-    /**
-     * @return Number of moving partitions.
-     */
-    public int moving() {
-        return moving;
-    }
-
-    /**
-     * @param moving Number of moving partitions.
-     */
-    public void moving(int moving) {
-        this.moving = moving;
     }
 
     /** {@inheritDoc} */

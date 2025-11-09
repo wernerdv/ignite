@@ -22,10 +22,13 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import org.apache.ignite.internal.Order;
+import org.apache.ignite.internal.managers.communication.GridDhtPartitionStateMessage;
 import org.apache.ignite.internal.processors.cache.distributed.dht.topology.GridDhtPartitionState;
+import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.plugin.extensions.communication.Message;
 
 /**
@@ -38,7 +41,7 @@ public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartition
     public static final GridPartitionStateMap EMPTY = new GridPartitionStateMap(0);
 
     /** Type code. */
-    public static final short TYPE_CODE = 515;
+    public static final short TYPE_CODE = 516;
 
     /** */
     private static final long serialVersionUID = 0L;
@@ -60,12 +63,15 @@ public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartition
      * The first element takes the first {@link GridPartitionStateMap#BITS} bits in reverse order,
      * the second element next {@link GridPartitionStateMap#BITS} bits in reverse order, etc.
      */
-    @Order(0)
-    private BitSet states;
+    private final BitSet states;
 
     /** */
-    @Order(1)
     private int size;
+
+    /** */
+    @Order(value = 0, method = "stateMap")
+    @SuppressWarnings("unused")
+    private Map<Integer, GridDhtPartitionStateMessage> map;
 
     /** {@inheritDoc} */
     @Override public Set<Entry<Integer, GridDhtPartitionState>> entrySet() {
@@ -199,13 +205,6 @@ public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartition
         return size;
     }
 
-    /**
-     * @param size Size of map.
-     */
-    public void size(int size) {
-        this.size = size;
-    }
-
     /** */
     private GridDhtPartitionState setState(int part, GridDhtPartitionState st) {
         GridDhtPartitionState old = state(part);
@@ -240,20 +239,6 @@ public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartition
         return st == 0 ? null : GridDhtPartitionState.fromOrdinal(st - 1);
     }
 
-    /**
-     * @return Encoded states in bits.
-     */
-    public BitSet states() {
-        return states;
-    }
-
-    /**
-     * @param states Encoded states in bits.
-     */
-    public void states(BitSet states) {
-        this.states = states != null ? states : new BitSet();
-    }
-
     /** {@inheritDoc} */
     @Override public boolean equals(Object o) {
         if (this == o)
@@ -270,6 +255,25 @@ public class GridPartitionStateMap extends AbstractMap<Integer, GridDhtPartition
     /** {@inheritDoc} */
     @Override public int hashCode() {
         return 31 * states.hashCode() + size;
+    }
+
+    /**
+     * @return Partition state map.
+     */
+    public Map<Integer, GridDhtPartitionStateMessage> stateMap() {
+        return F.viewReadOnly(this, GridDhtPartitionStateMessage::new);
+    }
+
+    /**
+     * @param map Partition state map.
+     */
+    public void stateMap(Map<Integer, GridDhtPartitionStateMessage> map) {
+        states.clear();
+        size = 0;
+
+        if (map != null)
+            for (Map.Entry<Integer, GridDhtPartitionStateMessage> entry : map.entrySet())
+                put(entry.getKey(), entry.getValue().value());
     }
 
     /** {@inheritDoc} */
