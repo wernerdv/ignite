@@ -170,7 +170,23 @@ public class GridDhtPartitionsFullMessage extends GridDhtPartitionsAbstractMessa
         else
             cp.parts = null;
 
-        cp.sendParts = sendParts;
+        if (sendParts != null) {
+            cp.sendParts = new HashMap<>(sendParts.size());
+
+            for (Map.Entry<Integer, GridDhtPartitionFullMap> e : sendParts.entrySet()) {
+                GridDhtPartitionFullMap val = e.getValue();
+
+                cp.sendParts.put(e.getKey(), new GridDhtPartitionFullMap(
+                    val.nodeId(),
+                    val.nodeOrder(),
+                    val.updateSequence(),
+                    val,
+                    false));
+            }
+        }
+        else
+            cp.sendParts = null;
+
         cp.dupPartsData = dupPartsData;
         cp.partCntrs = partCntrs;
         cp.partHistSuppliers = partHistSuppliers;
@@ -261,22 +277,7 @@ public class GridDhtPartitionsFullMessage extends GridDhtPartitionsAbstractMessa
      * @param sendParts Local partitions to send.
      */
     public void partitionsToSend(Map<Integer, GridDhtPartitionFullMap> sendParts) {
-        if (sendParts != null) {
-            this.sendParts = new HashMap<>(sendParts.size());
-
-            for (Map.Entry<Integer, GridDhtPartitionFullMap> e : sendParts.entrySet()) {
-                GridDhtPartitionFullMap val = e.getValue();
-
-                this.sendParts.put(e.getKey(), new GridDhtPartitionFullMap(
-                    val.nodeId(),
-                    val.nodeOrder(),
-                    val.updateSequence(),
-                    val,
-                    false));
-            }
-        }
-        else
-            this.sendParts = null;
+        this.sendParts = sendParts;
     }
 
     /**
