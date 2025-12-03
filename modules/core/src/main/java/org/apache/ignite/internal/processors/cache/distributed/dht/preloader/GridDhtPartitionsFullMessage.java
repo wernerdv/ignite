@@ -285,6 +285,8 @@ public class GridDhtPartitionsFullMessage extends GridDhtPartitionsAbstractMessa
      * @param dupDataCache Optional ID of cache with the same partition state map.
      */
     public void addFullPartitionsMap(int grpId, GridDhtPartitionFullMap fullMap, @Nullable Integer dupDataCache) {
+        //System.out.println(">>> FullMsg#addFullPartitionsMap [grpId=" + grpId + ", fullMap=" + fullMap + "]");
+
         assert fullMap != null;
 
         if (parts == null)
@@ -529,8 +531,13 @@ public class GridDhtPartitionsFullMessage extends GridDhtPartitionsAbstractMessa
                     @Override public byte[] apply(Object payload) throws IgniteCheckedException {
                         byte[] marshalled = U.marshal(ctx, payload);
 
-                        if (compressed())
+                        System.out.println(">>> Size of 'parts' before compression=" + marshalled.length + " bytes [map size=" + parts.size() + "]");
+
+                        if (compressed()) {
                             marshalled = U.zip(marshalled, ctx.gridConfig().getNetworkCompressionLevel());
+
+                            //System.out.println(">>> Size of 'parts' after compression=" + marshalled.length + " bytes");
+                        }
 
                         return marshalled;
                     }
