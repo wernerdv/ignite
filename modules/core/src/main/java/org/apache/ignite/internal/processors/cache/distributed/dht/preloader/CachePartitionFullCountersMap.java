@@ -51,7 +51,9 @@ public class CachePartitionFullCountersMap implements Message {
      */
     public CachePartitionFullCountersMap(CachePartitionFullCountersMap other) {
         initUpdCntrs = Arrays.copyOf(other.initUpdCntrs, other.initUpdCntrs.length);
-        updCntrs = Arrays.copyOf(other.updCntrs, other.updCntrs.length);
+        updCntrs = other.updCntrs != null
+            ? Arrays.copyOf(other.updCntrs, other.updCntrs.length)
+            : new long[initUpdCntrs.length];
     }
 
     /**
@@ -79,6 +81,9 @@ public class CachePartitionFullCountersMap implements Message {
      * @return Update counter for the partition with the given ID.
      */
     public long updateCounter(int p) {
+        if (updCntrs == null)
+            return 0;
+
         return updCntrs[p];
     }
 

@@ -512,7 +512,19 @@ public class DirectMessageReader implements MessageReader {
 
         int startPos = tmpBuf.position();
 
-        tmpBuf.put(msg0.uncompressed());
+        byte[] uncompressed = msg0.uncompressed();
+
+        if (uncompressed.length >= tmpBuf.remaining()) {
+            ByteBuffer newTmpBuf = ByteBuffer.allocateDirect(TMP_BUF_CAPACITY + uncompressed.length);
+
+            tmpBuf.flip();
+
+            newTmpBuf.put(tmpBuf);
+
+            tmpBuf = newTmpBuf;
+        }
+
+        tmpBuf.put(uncompressed);
         tmpBuf.position(startPos);
 
         tmpReader.setBuffer(tmpBuf);
