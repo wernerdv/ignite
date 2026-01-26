@@ -57,7 +57,8 @@ public class TcpDiscoveryNodeAddFinishedMessage extends TcpDiscoveryAbstractTrac
 
     /** Serialized client node attributes. */
     @Order(value = 8, method = "clientNodeAttributesBytes")
-    private byte[] clientNodeAttrsBytes;
+    @SuppressWarnings("unused")
+    private byte[] clientNodeAttrsBytesHolder;
 
     /** Constructor. */
     public TcpDiscoveryNodeAddFinishedMessage() {
@@ -137,43 +138,28 @@ public class TcpDiscoveryNodeAddFinishedMessage extends TcpDiscoveryAbstractTrac
      * @return Serialized client node attributes.
      */
     public byte[] clientNodeAttributesBytes() {
-        prepareMarshal();
+        if (clientNodeAttrs == null)
+            return null;
 
-        return clientNodeAttrsBytes;
+        try {
+            return U.marshal(jdk(), clientNodeAttrs);
+        }
+        catch (IgniteCheckedException e) {
+            throw new IgniteException(e);
+        }
     }
 
     /**
      * @param clientNodeAttrsBytes Serialized client node attributes.
      */
     public void clientNodeAttributesBytes(byte[] clientNodeAttrsBytes) {
-        this.clientNodeAttrsBytes = clientNodeAttrsBytes;
-
-        finishUnmarshal();
-    }
-
-    /** */
-    private void prepareMarshal() {
-        if (clientNodeAttrs != null && clientNodeAttrsBytes == null) {
-            try {
-                clientNodeAttrsBytes = U.marshal(jdk(), clientNodeAttrs);
-            }
-            catch (IgniteCheckedException e) {
-                throw new IgniteException(e);
-            }
-        }
-    }
-
-    /** */
-    private void finishUnmarshal() {
-        if (clientNodeAttrsBytes != null && clientNodeAttrs == null) {
+        if (clientNodeAttrsBytes != null) {
             try {
                 clientNodeAttrs = U.unmarshal(jdk(), clientNodeAttrsBytes, U.gridClassLoader());
             }
             catch (IgniteCheckedException e) {
                 throw new IgniteException(e);
             }
-
-            clientNodeAttrsBytes = null;
         }
     }
 
