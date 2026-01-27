@@ -84,8 +84,6 @@ public abstract class TcpDiscoveryAbstractTraceableMessage extends TcpDiscoveryA
         if (spanBytes == null)
             return;
 
-        readResolve();
-
         spanContainer.serializedSpanBytes(spanBytes);
     }
 

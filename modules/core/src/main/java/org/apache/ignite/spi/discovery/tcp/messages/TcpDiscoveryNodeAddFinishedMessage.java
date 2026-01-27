@@ -23,6 +23,7 @@ import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.IgniteException;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.util.tostring.GridToStringExclude;
+import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
 import org.apache.ignite.plugin.extensions.communication.Message;
@@ -153,7 +154,9 @@ public class TcpDiscoveryNodeAddFinishedMessage extends TcpDiscoveryAbstractTrac
      * @param clientNodeAttrsBytes Serialized client node attributes.
      */
     public void clientNodeAttributesBytes(byte[] clientNodeAttrsBytes) {
-        if (clientNodeAttrsBytes != null) {
+        if (F.isEmpty(clientNodeAttrsBytes))
+            clientNodeAttrs = null;
+        else {
             try {
                 clientNodeAttrs = U.unmarshal(jdk(), clientNodeAttrsBytes, U.gridClassLoader());
             }
