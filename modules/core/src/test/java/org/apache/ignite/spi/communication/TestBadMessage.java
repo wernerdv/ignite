@@ -17,50 +17,46 @@
 
 package org.apache.ignite.spi.communication;
 
+import java.util.UUID;
 import org.apache.ignite.internal.Order;
+import org.apache.ignite.internal.processors.cache.GridCacheMessage;
 import org.apache.ignite.plugin.extensions.communication.Message;
 
-/** */
-public class TestVolatilePayloadMessage implements Message {
+/**
+ * Test message class.
+ */
+public class TestBadMessage extends GridCacheMessage {
     /** */
-    public static final short DIRECT_TYPE = 210;
+    public static final short DIRECT_TYPE = 204;
 
-    /** */
+    /** Node id. */
     @Order(0)
-    int idx;
+    UUID nodeId;
 
-    /** */
+    /** Integer field. */
     @Order(1)
-    byte[] payload;
+    int id;
 
-    /** */
+    /** Body. */
     @Order(2)
-    int payloadLen;
+    String body;
 
     /** */
-    public TestVolatilePayloadMessage() {
-        // No-op.
-    }
+    @Order(3)
+    Message msg;
 
-    /** */
-    public TestVolatilePayloadMessage(int idx, byte[] payload) {
-        this.idx = idx;
-        this.payload = payload;
-        this.payloadLen = payload.length;
-    }
-
-    /** */
-    public int index() {
-        return idx;
-    }
-
-    /** @return Network payload. */
-    public byte[] payload() {
-        return payload;
+    /** {@inheritDoc} */
+    @Override public boolean addDeploymentInfo() {
+        return false;
     }
 
     /** {@inheritDoc} */
     @Override public short directType() {
         return DIRECT_TYPE;
+    }
+
+    /** {@inheritDoc} */
+    @Override public String toString() {
+        throw new RuntimeException("Exception while log message");
     }
 }

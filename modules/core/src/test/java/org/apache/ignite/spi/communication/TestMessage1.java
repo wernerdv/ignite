@@ -18,45 +18,46 @@
 package org.apache.ignite.spi.communication;
 
 import org.apache.ignite.internal.Order;
+import org.apache.ignite.internal.processors.cache.GridCacheMessage;
 import org.apache.ignite.plugin.extensions.communication.Message;
 
-/** */
-public class TestVolatilePayloadMessage implements Message {
+/**
+ * Test message class.
+ */
+public class TestMessage1 extends GridCacheMessage {
     /** */
-    public static final short DIRECT_TYPE = 210;
+    public static final short DIRECT_TYPE = 203;
 
-    /** */
+    /** Body. */
     @Order(0)
-    int idx;
+    String body;
 
     /** */
     @Order(1)
-    byte[] payload;
+    Message msg;
 
-    /** */
-    @Order(2)
-    int payloadLen;
-
-    /** */
-    public TestVolatilePayloadMessage() {
-        // No-op.
+    /**
+     * @param msg Message.
+     * @param body Message body.
+     */
+    public void init(Message msg, String body) {
+        this.msg = msg;
+        this.body = body;
     }
 
-    /** */
-    public TestVolatilePayloadMessage(int idx, byte[] payload) {
-        this.idx = idx;
-        this.payload = payload;
-        this.payloadLen = payload.length;
+    /** {@inheritDoc} */
+    @Override public boolean addDeploymentInfo() {
+        return false;
     }
 
-    /** */
-    public int index() {
-        return idx;
+    /** @return Body. */
+    public String body() {
+        return body;
     }
 
-    /** @return Network payload. */
-    public byte[] payload() {
-        return payload;
+    /** @return Message. */
+    public Message message() {
+        return msg;
     }
 
     /** {@inheritDoc} */

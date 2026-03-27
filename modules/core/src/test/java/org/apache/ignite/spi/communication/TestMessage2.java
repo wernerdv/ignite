@@ -17,46 +17,65 @@
 
 package org.apache.ignite.spi.communication;
 
+import java.util.UUID;
 import org.apache.ignite.internal.Order;
+import org.apache.ignite.internal.processors.cache.GridCacheMessage;
 import org.apache.ignite.plugin.extensions.communication.Message;
 
-/** */
-public class TestVolatilePayloadMessage implements Message {
+/**
+ * Test message class.
+ */
+public class TestMessage2 extends GridCacheMessage {
     /** */
-    public static final short DIRECT_TYPE = 210;
+    public static final short DIRECT_TYPE = 201;
 
-    /** */
+    /** Node id. */
     @Order(0)
-    int idx;
+    UUID nodeId;
 
-    /** */
+    /** Integer field. */
     @Order(1)
-    byte[] payload;
+    int id;
 
-    /** */
+    /** Body. */
     @Order(2)
-    int payloadLen;
+    String body;
 
     /** */
-    public TestVolatilePayloadMessage() {
-        // No-op.
+    @Order(3)
+    Message msg;
+
+    /** @param mes Message. */
+    public void init(Message mes, UUID nodeId, int id, String body) {
+        this.nodeId = nodeId;
+        this.id = id;
+        this.msg = mes;
+        this.body = body;
     }
 
-    /** */
-    public TestVolatilePayloadMessage(int idx, byte[] payload) {
-        this.idx = idx;
-        this.payload = payload;
-        this.payloadLen = payload.length;
+    /** {@inheritDoc} */
+    @Override public boolean addDeploymentInfo() {
+        return false;
     }
 
-    /** */
-    public int index() {
-        return idx;
+    /** @return Body.*/
+    public String body() {
+        return body;
     }
 
-    /** @return Network payload. */
-    public byte[] payload() {
-        return payload;
+    /** @return Message. */
+    public Message message() {
+        return msg;
+    }
+
+    /** @return Node id. */
+    public UUID nodeId() {
+        return nodeId;
+    }
+
+    /** @return Id. */
+    public int id() {
+        return id;
     }
 
     /** {@inheritDoc} */

@@ -17,46 +17,33 @@
 
 package org.apache.ignite.spi.communication;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.ignite.internal.Order;
-import org.apache.ignite.plugin.extensions.communication.Message;
+import org.apache.ignite.internal.processors.cache.GridCacheMessage;
 
 /** */
-public class TestVolatilePayloadMessage implements Message {
+public class TestMessage extends GridCacheMessage {
     /** */
-    public static final short DIRECT_TYPE = 210;
+    public static final short DIRECT_TYPE = 202;
 
     /** */
     @Order(0)
-    int idx;
+    Collection<TestMessage1> entries = new ArrayList<>();
 
-    /** */
-    @Order(1)
-    byte[] payload;
-
-    /** */
-    @Order(2)
-    int payloadLen;
-
-    /** */
-    public TestVolatilePayloadMessage() {
-        // No-op.
+    /** @param entry Entry. */
+    public void add(TestMessage1 entry) {
+        entries.add(entry);
     }
 
-    /** */
-    public TestVolatilePayloadMessage(int idx, byte[] payload) {
-        this.idx = idx;
-        this.payload = payload;
-        this.payloadLen = payload.length;
+    /** {@inheritDoc} */
+    @Override public boolean addDeploymentInfo() {
+        return false;
     }
 
-    /** */
-    public int index() {
-        return idx;
-    }
-
-    /** @return Network payload. */
-    public byte[] payload() {
-        return payload;
+    /** @return Collection of test messages. */
+    public Collection<TestMessage1> entries() {
+        return entries;
     }
 
     /** {@inheritDoc} */
