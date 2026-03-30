@@ -195,8 +195,6 @@ import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.Ign
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.IgniteDhtPartitionHistorySuppliersMapSerializer;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.IgniteDhtPartitionsToReloadMap;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.IgniteDhtPartitionsToReloadMapSerializer;
-import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.IntLongMap;
-import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.IntLongMapSerializer;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.latch.LatchAckMessage;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.latch.LatchAckMessageSerializer;
 import org.apache.ignite.internal.processors.cache.distributed.near.CacheVersionedValue;
@@ -559,7 +557,6 @@ public class GridIoMessageFactory implements MessageFactoryProvider {
             new IgniteDhtPartitionHistorySuppliersMapSerializer());
         factory.register(513, IgniteDhtPartitionsToReloadMap::new,
             new IgniteDhtPartitionsToReloadMapSerializer());
-        factory.register(514, IntLongMap::new, new IntLongMapSerializer());
         factory.register(517, GridPartitionStateMap::new, new GridPartitionStateMapSerializer());
         factory.register(518, GridDhtPartitionMap::new, new GridDhtPartitionMapSerializer());
         factory.register(519, GridDhtPartitionFullMap::new, new GridDhtPartitionFullMapSerializer());
