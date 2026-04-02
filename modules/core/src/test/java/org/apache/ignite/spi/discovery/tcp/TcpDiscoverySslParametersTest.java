@@ -17,6 +17,7 @@
 
 package org.apache.ignite.spi.discovery.tcp;
 
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.configuration.IgniteConfiguration;
@@ -24,6 +25,9 @@ import org.apache.ignite.ssl.SslContextFactory;
 import org.apache.ignite.testframework.GridTestUtils;
 import org.apache.ignite.testframework.junits.common.GridCommonAbstractTest;
 import org.junit.Test;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Tests cases when node connects to cluster with different set of cipher suites.
@@ -104,6 +108,27 @@ public class TcpDiscoverySslParametersTest extends GridCommonAbstractTest {
      */
     @Test
     public void testNoCommonCipherSuite() throws Exception {
+        String[] tlsVersions = {"TLSv1.2", "TLSv1.3"};
+
+        for (String tlsVersion : tlsVersions) {
+            try {
+                SSLContext context = SSLContext.getInstance(tlsVersion);
+                context.init(null, null, null);
+                SSLSocketFactory factory = context.getSocketFactory();
+
+                String[] ciphers = factory.getDefaultCipherSuites();
+                System.out.println("\n" + tlsVersion + " — Default ciphers (" + ciphers.length + "):");
+                Arrays.stream(ciphers).sorted().forEach(cipher -> System.out.println("  " + cipher));
+
+                ciphers = factory.getSupportedCipherSuites();
+                System.out.println("\n" + tlsVersion + " — Supported ciphers (" + ciphers.length + "):");
+                Arrays.stream(ciphers).sorted().forEach(cipher -> System.out.println("  " + cipher));
+            }
+            catch (Exception e) {
+                System.err.println("Error for " + tlsVersion + ": " + e.getMessage());
+            }
+        }
+
         checkDiscoveryFailure(
             new String[][] {
                 new String[] {
