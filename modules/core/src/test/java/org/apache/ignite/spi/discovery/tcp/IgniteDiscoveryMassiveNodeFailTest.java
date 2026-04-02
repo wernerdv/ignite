@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.ignite.internal;
+package org.apache.ignite.spi.discovery.tcp;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,9 +31,9 @@ import org.apache.ignite.cluster.ClusterNode;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.events.DiscoveryEvent;
 import org.apache.ignite.events.EventType;
+import org.apache.ignite.internal.IgniteEx;
 import org.apache.ignite.internal.util.GridConcurrentHashSet;
-import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryIoSession;
-import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
+import org.apache.ignite.internal.util.typedef.internal.U;
 import org.apache.ignite.spi.discovery.tcp.internal.TcpDiscoveryNode;
 import org.apache.ignite.spi.discovery.tcp.messages.TcpDiscoveryAbstractMessage;
 import org.apache.ignite.testframework.junits.WithSystemProperty;
@@ -146,8 +146,16 @@ public class IgniteDiscoveryMassiveNodeFailTest extends GridCommonAbstractTest {
         forceFailConnectivity = true;
 
         if (simulateNodeFailure) {
-            for (int i = 3; i < 5; i++)
-                ((TcpDiscoverySpi)grid(i).configuration().getDiscoverySpi()).simulateNodeFailure();
+            for (int i = 3; i < 5; i++) {
+                TcpDiscoverySpi spi = (TcpDiscoverySpi)grid(i).configuration().getDiscoverySpi();
+
+                spi.simulateNodeFailure();
+
+                Iterable<? extends Thread> readers = U.field((ServerImpl)U.field(spi, "impl"), "readers");
+
+                U.interrupt(readers);
+                U.joinThreads(readers, log);
+            }
         }
 
         assert latch.await(waitTime(), TimeUnit.MILLISECONDS);
