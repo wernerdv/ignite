@@ -33,6 +33,7 @@ import org.apache.ignite.internal.GridSelfTest;
 import org.apache.ignite.internal.GridStartStopSelfTest;
 import org.apache.ignite.internal.GridStopWithCancelSelfTest;
 import org.apache.ignite.internal.GridStopWithCollisionSpiTest;
+import org.apache.ignite.internal.IgniteDiscoveryMassiveNodeFailTest;
 import org.apache.ignite.internal.IgniteLocalNodeMapBeforeStartTest;
 import org.apache.ignite.internal.IgniteSlowClientDetectionSelfTest;
 import org.apache.ignite.internal.TransactionsMXBeanImplTest;
@@ -41,6 +42,7 @@ import org.apache.ignite.internal.codegen.MessageProcessorTest;
 import org.apache.ignite.internal.managers.communication.CompressedMessageTest;
 import org.apache.ignite.internal.managers.communication.DefaultEnumMapperTest;
 import org.apache.ignite.internal.managers.communication.ErrorMessageSelfTest;
+import org.apache.ignite.internal.managers.discovery.IgniteDiscoveryMessageSerializationTest;
 import org.apache.ignite.internal.processors.affinity.GridAffinityAssignmentV2Test;
 import org.apache.ignite.internal.processors.affinity.GridAffinityAssignmentV2TestNoOptimizations;
 import org.apache.ignite.internal.processors.affinity.GridAffinityProcessorRendezvousSelfTest;
@@ -68,7 +70,74 @@ import org.apache.ignite.messaging.GridMessagingNoPeerClassLoadingSelfTest;
 import org.apache.ignite.messaging.GridMessagingSelfTest;
 import org.apache.ignite.messaging.IgniteMessagingSendAsyncTest;
 import org.apache.ignite.messaging.IgniteMessagingWithClientTest;
+import org.apache.ignite.spi.ExponentialBackoffTimeoutStrategyTest;
 import org.apache.ignite.spi.GridSpiLocalHostInjectionTest;
+import org.apache.ignite.spi.GridTcpSpiForwardingSelfTest;
+import org.apache.ignite.spi.discovery.AuthenticationRestartTest;
+import org.apache.ignite.spi.discovery.DiscoverySpiDataExchangeTest;
+import org.apache.ignite.spi.discovery.FilterDataForClientNodeDiscoveryTest;
+import org.apache.ignite.spi.discovery.IgniteClientReconnectEventHandlingTest;
+import org.apache.ignite.spi.discovery.IgniteDiscoveryCacheReuseSelfTest;
+import org.apache.ignite.spi.discovery.LongClientConnectToClusterTest;
+import org.apache.ignite.spi.discovery.datacenter.MultiDataCenterClientRoutingTest;
+import org.apache.ignite.spi.discovery.datacenter.MultiDataCenterDeploymentTest;
+import org.apache.ignite.spi.discovery.tcp.DiscoveryClientSocketTest;
+import org.apache.ignite.spi.discovery.tcp.DiscoveryUnmarshalVulnerabilityTest;
+import org.apache.ignite.spi.discovery.tcp.IgniteClientConnectSslTest;
+import org.apache.ignite.spi.discovery.tcp.IgniteClientConnectTest;
+import org.apache.ignite.spi.discovery.tcp.IgniteClientReconnectMassiveShutdownSslTest;
+import org.apache.ignite.spi.discovery.tcp.IgniteClientReconnectMassiveShutdownTest;
+import org.apache.ignite.spi.discovery.tcp.IgniteMetricsOverflowTest;
+import org.apache.ignite.spi.discovery.tcp.MultiDataCenterRingTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoveryMarshallerCheckSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoverySpiCoordinatorChangeTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoverySpiFailureTimeoutSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoverySpiMulticastTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoverySpiSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpClientDiscoveryUnresolvedHostTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryClientSuspensionSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryConcurrentStartTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryCoordinatorFailureTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryDeadNodeAddressResolvingTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryFailedJoinTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryIpFinderCleanerTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryIpFinderFailureTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryMdcSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryMetricsWarnLogTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryMultiThreadedTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryNetworkIssuesTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryNodeAttributesUpdateOnReconnectTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryNodeConfigConsistentIdSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryNodeConsistentIdSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryNodeJoinAndFailureTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryPendingMessageDeliveryMdcReversedTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryPendingMessageDeliveryMdcTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryPendingMessageDeliveryTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryReconnectUnstableTopologyTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryRestartTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySegmentationPolicyTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySnapshotHistoryTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiConfigSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiFailureTimeoutSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiMBeanTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiReconnectDelayTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiSslSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiStartStopSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpiWildcardSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySslSecuredUnsecuredTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySslSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySslTrustedSelfTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySslTrustedUntrustedTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryWithAddressFilterTest;
+import org.apache.ignite.spi.discovery.tcp.TcpDiscoveryWithWrongServerTest;
+import org.apache.ignite.spi.discovery.tcp.TestMetricUpdateFailure;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.jdbc.TcpDiscoveryJdbcIpFinderSelfTest;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinderSelfTest;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.sharedfs.TcpDiscoverySharedFsIpFinderSelfTest;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinderDnsResolveTest;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinderSelfTest;
 import org.apache.ignite.testframework.junits.common.GridCommonAbstractTestSelfTest;
 import org.apache.ignite.testframework.junits.multijvm.JavaVersionCommandParserTest;
 import org.junit.runner.RunWith;
@@ -151,7 +220,108 @@ import org.junit.runners.Suite;
     ErrorMessageSelfTest.class,
     DefaultEnumMapperTest.class,
     IgniteDataTransferObjectProcessorTest.class,
-    CompressedMessageTest.class
+    CompressedMessageTest.class,
+    TcpDiscoveryVmIpFinderDnsResolveTest.class,
+    TcpDiscoveryVmIpFinderSelfTest.class,
+    TcpDiscoverySharedFsIpFinderSelfTest.class,
+    TcpDiscoveryJdbcIpFinderSelfTest.class,
+    TcpDiscoveryMulticastIpFinderSelfTest.class,
+    TcpDiscoveryIpFinderCleanerTest.class,
+
+    TcpDiscoverySelfTest.class,
+    TcpDiscoverySpiSelfTest.class,
+    TcpDiscoverySpiSslSelfTest.class,
+    TcpDiscoverySpiWildcardSelfTest.class,
+    TcpDiscoverySpiFailureTimeoutSelfTest.class,
+    TcpDiscoverySpiMBeanTest.class,
+    TcpDiscoverySpiStartStopSelfTest.class,
+    TcpDiscoverySpiConfigSelfTest.class,
+    TcpDiscoverySnapshotHistoryTest.class,
+    TcpDiscoveryNodeJoinAndFailureTest.class,
+
+    GridTcpSpiForwardingSelfTest.class,
+
+    ExponentialBackoffTimeoutStrategyTest.class,
+
+    TcpClientDiscoverySpiSelfTest.class,
+    LongClientConnectToClusterTest.class,
+    TcpClientDiscoveryMarshallerCheckSelfTest.class,
+    TcpClientDiscoverySpiCoordinatorChangeTest.class,
+    TcpClientDiscoverySpiMulticastTest.class,
+    TcpClientDiscoverySpiFailureTimeoutSelfTest.class,
+    TcpClientDiscoveryUnresolvedHostTest.class,
+
+    TcpDiscoveryNodeConsistentIdSelfTest.class,
+    TcpDiscoveryNodeConfigConsistentIdSelfTest.class,
+
+    TcpDiscoveryRestartTest.class,
+    TcpDiscoveryMultiThreadedTest.class,
+    TcpDiscoveryMetricsWarnLogTest.class,
+    TcpDiscoveryConcurrentStartTest.class,
+
+    TcpDiscoverySegmentationPolicyTest.class,
+
+    TcpDiscoveryNodeAttributesUpdateOnReconnectTest.class,
+    AuthenticationRestartTest.class,
+
+    TcpDiscoveryWithWrongServerTest.class,
+
+    TcpDiscoveryWithAddressFilterTest.class,
+
+    TcpDiscoverySpiReconnectDelayTest.class,
+
+    TcpDiscoveryNetworkIssuesTest.class,
+
+    IgniteDiscoveryMassiveNodeFailTest.class,
+    TcpDiscoveryCoordinatorFailureTest.class,
+
+    TestMetricUpdateFailure.class,
+
+    // Client connect.
+    IgniteClientConnectTest.class,
+    IgniteClientConnectSslTest.class,
+    IgniteClientReconnectMassiveShutdownTest.class,
+    IgniteClientReconnectMassiveShutdownSslTest.class,
+    TcpDiscoveryClientSuspensionSelfTest.class,
+    IgniteClientReconnectEventHandlingTest.class,
+
+    TcpDiscoveryFailedJoinTest.class,
+
+    // SSL.
+    TcpDiscoverySslSelfTest.class,
+    TcpDiscoverySslTrustedSelfTest.class,
+    TcpDiscoverySslSecuredUnsecuredTest.class,
+    TcpDiscoverySslTrustedUntrustedTest.class,
+    // Disco cache reuse.
+    IgniteDiscoveryCacheReuseSelfTest.class,
+
+    DiscoveryUnmarshalVulnerabilityTest.class,
+
+    FilterDataForClientNodeDiscoveryTest.class,
+
+    TcpDiscoveryPendingMessageDeliveryTest.class,
+
+    TcpDiscoveryReconnectUnstableTopologyTest.class,
+
+    IgniteMetricsOverflowTest.class,
+
+    DiscoveryClientSocketTest.class,
+
+    DiscoverySpiDataExchangeTest.class,
+
+    TcpDiscoveryIpFinderFailureTest.class,
+
+    TcpDiscoveryDeadNodeAddressResolvingTest.class,
+
+    // MDC.
+    TcpDiscoveryMdcSelfTest.class,
+    TcpDiscoveryPendingMessageDeliveryMdcTest.class,
+    TcpDiscoveryPendingMessageDeliveryMdcReversedTest.class,
+    MultiDataCenterDeploymentTest.class,
+    MultiDataCenterRingTest.class,
+    MultiDataCenterClientRoutingTest.class,
+
+    IgniteDiscoveryMessageSerializationTest.class
 })
 public class IgniteBasicTestSuite {
 }
