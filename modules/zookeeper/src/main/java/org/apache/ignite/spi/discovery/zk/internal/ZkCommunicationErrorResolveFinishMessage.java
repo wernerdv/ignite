@@ -18,25 +18,35 @@
 package org.apache.ignite.spi.discovery.zk.internal;
 
 import java.util.UUID;
+import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.plugin.extensions.communication.Message;
+import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.apache.ignite.spi.discovery.DiscoverySpiCustomMessage;
 import org.jetbrains.annotations.Nullable;
 
 /**
  *
  */
-class ZkCommunicationErrorResolveFinishMessage implements DiscoverySpiCustomMessage, ZkInternalMessage {
+class ZkCommunicationErrorResolveFinishMessage implements DiscoverySpiCustomMessage, ZkInternalMessage, Message {
     /** */
     private static final long serialVersionUID = 0L;
 
     /** */
-    final UUID futId;
+    @Order(0)
+    UUID futId;
 
     /** */
-    final long topVer;
+    @Order(1)
+    long topVer;
 
     /** */
-    transient ZkCommunicationErrorResolveResult res;
+    ZkCommunicationErrorResolveResult res;
+
+    /** Constructor for {@link MessageFactory}. */
+    public ZkCommunicationErrorResolveFinishMessage() {
+        // No-op.
+    }
 
     /**
      * @param futId Future ID.
