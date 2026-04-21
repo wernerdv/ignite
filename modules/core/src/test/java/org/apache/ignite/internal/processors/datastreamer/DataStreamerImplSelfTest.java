@@ -687,7 +687,7 @@ public class DataStreamerImplSelfTest extends GridCommonAbstractTest {
 
                         appMsg = new DataStreamerRequest(
                             req.requestId(),
-                            req.responseTopicBytes(),
+                            req.responseTopic(),
                             req.cacheName(),
                             req.updaterBytes(),
                             req.entries(),
@@ -706,7 +706,6 @@ public class DataStreamerImplSelfTest extends GridCommonAbstractTest {
                         msg = new GridIoMessage(
                             GridTestUtils.<Byte>getFieldValue(ioMsg, "plc"),
                             GridTestUtils.getFieldValue(ioMsg, "topic"),
-                            GridTestUtils.<Integer>getFieldValue(ioMsg, "topicOrd"),
                             appMsg,
                             GridTestUtils.<Boolean>getFieldValue(ioMsg, "ordered"),
                             ioMsg.timeout(),

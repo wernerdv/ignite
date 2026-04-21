@@ -30,13 +30,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Deployment request.
  */
+// TODO CHECK
 public class GridDeploymentRequest implements Message {
     /** Response topic. Response should be sent back to this topic. */
-    /** */
     @Order(0)
     @Nullable GridTopic topic;
 
-    /** */
+    /** Topic ID. */
     @Order(1)
     @Nullable IgniteUuid topicId;
 
@@ -99,7 +99,7 @@ public class GridDeploymentRequest implements Message {
      *
      * @return Resource or class name.
      */
-    public String resourceName() {
+    String resourceName() {
         return rsrcName;
     }
 
@@ -108,7 +108,7 @@ public class GridDeploymentRequest implements Message {
      *
      * @return Property class loader ID.
      */
-    public @Nullable IgniteUuid classLoaderId() {
+    @Nullable IgniteUuid classLoaderId() {
         return ldrId;
     }
 
@@ -117,7 +117,7 @@ public class GridDeploymentRequest implements Message {
      *
      * @return Property undeploy.
      */
-    public boolean undeploy() {
+    boolean undeploy() {
         assert topic == null && topicId == null || topic != null && topicId != null;
 
         return topic == null;
@@ -127,7 +127,7 @@ public class GridDeploymentRequest implements Message {
      * @return Node IDs chain which is updated as request jumps
      *      from node to node.
      */
-    public Collection<UUID> nodeIds() {
+    Collection<UUID> nodeIds() {
         return nodeIds;
     }
 
@@ -135,10 +135,9 @@ public class GridDeploymentRequest implements Message {
      * @param nodeIds Node IDs chain which is updated as request jumps
      *      from node to node.
      */
-    public void nodeIds(Collection<UUID> nodeIds) {
+    void nodeIds(Collection<UUID> nodeIds) {
         this.nodeIds = nodeIds;
     }
-
 
     /** {@inheritDoc} */
     @Override public String toString() {

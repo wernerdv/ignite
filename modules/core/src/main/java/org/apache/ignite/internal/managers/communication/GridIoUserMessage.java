@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.ignite.configuration.DeploymentMode;
+import org.apache.ignite.internal.GridTopicMessage;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.deployment.GridDeployment;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * User message wrapper.
  */
+// TODO CHECK
 public class GridIoUserMessage implements Message {
     /** Message body. */
     private Object body;
@@ -44,12 +46,9 @@ public class GridIoUserMessage implements Message {
     @Order(1)
     IgniteUuid clsLdrId;
 
-    /** Message topic. */
-    private Object topic;
-
-    /** Serialized message topic. */
+    /** Topic message. */
     @Order(2)
-    byte[] topicBytes;
+    GridTopicMessage topicMsg;
 
     /** Deployment mode. */
     @Order(3)
@@ -76,7 +75,6 @@ public class GridIoUserMessage implements Message {
      * @param bodyBytes Serialized message body.
      * @param depClsName Message body class name.
      * @param topic Message topic.
-     * @param topicBytes Serialized message topic bytes.
      * @param clsLdrId Class loader ID.
      * @param depMode Deployment mode.
      * @param userVer User version.
@@ -87,7 +85,6 @@ public class GridIoUserMessage implements Message {
         @Nullable byte[] bodyBytes,
         @Nullable String depClsName,
         @Nullable Object topic,
-        @Nullable byte[] topicBytes,
         @Nullable IgniteUuid clsLdrId,
         @Nullable DeploymentMode depMode,
         @Nullable String userVer,
@@ -95,8 +92,10 @@ public class GridIoUserMessage implements Message {
         this.body = body;
         this.bodyBytes = bodyBytes;
         this.depClsName = depClsName;
-        this.topic = topic;
-        this.topicBytes = topicBytes;
+
+        if (topic != null)
+            topicMsg = new GridTopicMessage(topic);
+
         this.depMode = depMode;
         this.clsLdrId = clsLdrId;
         this.userVer = userVer;
@@ -120,63 +119,49 @@ public class GridIoUserMessage implements Message {
     /**
      * @return the Class loader ID.
      */
-    @Nullable public IgniteUuid classLoaderId() {
+    @Nullable IgniteUuid classLoaderId() {
         return clsLdrId;
     }
 
     /**
      * @return Deployment mode.
      */
-    @Nullable public DeploymentMode deploymentMode() {
+    @Nullable DeploymentMode deploymentMode() {
         return depMode;
     }
 
     /**
      * @return Message body class name.
      */
-    @Nullable public String deploymentClassName() {
+    @Nullable String deploymentClassName() {
         return depClsName;
     }
 
     /**
      * @return User version.
      */
-    @Nullable public String userVersion() {
+    @Nullable String userVersion() {
         return userVer;
     }
 
     /**
      * @return Node class loader participant map.
      */
-    @Nullable public Map<UUID, IgniteUuid> loaderParticipants() {
+    @Nullable Map<UUID, IgniteUuid> loaderParticipants() {
         return ldrParties != null ? Collections.unmodifiableMap(ldrParties) : null;
-    }
-
-    /**
-     * @return Serialized message topic.
-     */
-    @Nullable public byte[] topicBytes() {
-        return topicBytes;
-    }
-
-    /**
-     * @param topic New message topic.
-     */
-    public void topic(Object topic) {
-        this.topic = topic;
     }
 
     /**
      * @return Message topic.
      */
-    @Nullable public Object topic() {
-        return topic;
+    @Nullable Object topic() {
+        return GridTopicMessage.topic(topicMsg);
     }
 
     /**
      * @param body New message body.
      */
-    public void body(Object body) {
+    void body(Object body) {
         this.body = body;
     }
 
@@ -190,17 +175,16 @@ public class GridIoUserMessage implements Message {
     /**
      * @param dep New message deployment.
      */
-    public void deployment(GridDeployment dep) {
+    void deployment(GridDeployment dep) {
         this.dep = dep;
     }
 
     /**
      * @return Message deployment.
      */
-    @Nullable public GridDeployment deployment() {
+    @Nullable GridDeployment deployment() {
         return dep;
     }
-
 
     /** {@inheritDoc} */
     @Override public String toString() {

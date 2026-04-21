@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.ignite.configuration.DeploymentMode;
+import org.apache.ignite.internal.GridTopicMessage;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.processors.affinity.AffinityTopologyVersion;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
@@ -39,9 +40,8 @@ public class DataStreamerRequest implements Message {
     long reqId;
 
     /** */
-    // TODO: Refactor bytes serialization - IGNITE-27977
     @Order(1)
-    byte[] resTopicBytes;
+    GridTopicMessage resTopicMsg;
 
     /** Cache name. */
     @Order(2)
@@ -110,7 +110,7 @@ public class DataStreamerRequest implements Message {
 
     /**
      * @param reqId Request ID.
-     * @param resTopicBytes Response topic.
+     * @param resTopic Response topic.
      * @param cacheName Cache name.
      * @param updaterBytes Cache receiver.
      * @param entries Entries to put.
@@ -128,7 +128,7 @@ public class DataStreamerRequest implements Message {
      */
     public DataStreamerRequest(
         long reqId,
-        byte[] resTopicBytes,
+        Object resTopic,
         @Nullable String cacheName,
         byte[] updaterBytes,
         Collection<DataStreamerEntry> entries,
@@ -147,7 +147,7 @@ public class DataStreamerRequest implements Message {
         assert topVer != null;
 
         this.reqId = reqId;
-        this.resTopicBytes = resTopicBytes;
+        resTopicMsg = new GridTopicMessage(resTopic);
         this.cacheName = cacheName;
         this.updaterBytes = updaterBytes;
         this.entries = entries;
@@ -174,8 +174,8 @@ public class DataStreamerRequest implements Message {
     /**
      * @return Response topic.
      */
-    public byte[] responseTopicBytes() {
-        return resTopicBytes;
+    public Object responseTopic() {
+        return GridTopicMessage.topic(resTopicMsg);
     }
 
     /**
@@ -280,5 +280,4 @@ public class DataStreamerRequest implements Message {
     @Override public String toString() {
         return S.toString(DataStreamerRequest.class, this);
     }
-
 }
