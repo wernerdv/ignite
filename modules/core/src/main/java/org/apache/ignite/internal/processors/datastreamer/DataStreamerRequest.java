@@ -167,105 +167,105 @@ public class DataStreamerRequest implements Message {
     /**
      * @return Request ID.
      */
-    public long requestId() {
+    long requestId() {
         return reqId;
     }
 
     /**
      * @return Response topic.
      */
-    public Object responseTopic() {
+    Object responseTopic() {
         return GridTopicMessage.topic(resTopicMsg);
     }
 
     /**
      * @return Cache name.
      */
-    public String cacheName() {
+    String cacheName() {
         return cacheName;
     }
 
     /**
      * @return Updater.
      */
-    public byte[] updaterBytes() {
+    byte[] updaterBytes() {
         return updaterBytes;
     }
 
     /**
      * @return Entries to update.
      */
-    public Collection<DataStreamerEntry> entries() {
+    Collection<DataStreamerEntry> entries() {
         return entries;
     }
 
     /**
      * @return {@code True} to ignore ownership.
      */
-    public boolean ignoreDeploymentOwnership() {
+    boolean ignoreDeploymentOwnership() {
         return ignoreDepOwnership;
     }
 
     /**
      * @return Skip store flag.
      */
-    public boolean skipStore() {
+    boolean skipStore() {
         return skipStore;
     }
 
     /**
      * @return Keep binary flag.
      */
-    public boolean keepBinary() {
+    boolean keepBinary() {
         return keepBinary;
     }
 
     /**
      * @return Deployment mode.
      */
-    public DeploymentMode deploymentMode() {
+    DeploymentMode deploymentMode() {
         return depMode;
     }
 
     /**
      * @return Sample class name.
      */
-    public String sampleClassName() {
+    String sampleClassName() {
         return sampleClsName;
     }
 
     /**
      * @return User version.
      */
-    public String userVersion() {
+    String userVersion() {
         return userVer;
     }
 
     /**
      * @return Participants.
      */
-    public Map<UUID, IgniteUuid> participants() {
+    Map<UUID, IgniteUuid> participants() {
         return ldrParticipants;
     }
 
     /**
      * @return Class loader ID.
      */
-    public IgniteUuid classLoaderId() {
+    IgniteUuid classLoaderId() {
         return clsLdrId;
     }
 
     /**
      * @return {@code True} to force local deployment.
      */
-    public boolean forceLocalDeployment() {
+    boolean forceLocalDeployment() {
         return forceLocDep;
     }
 
     /**
      * @return Topology version.
      */
-    public AffinityTopologyVersion topologyVersion() {
+    AffinityTopologyVersion topologyVersion() {
         return topVer;
     }
 

@@ -178,7 +178,7 @@ public enum GridTopic {
      * @param id Topic ID.
      * @return Grid message topic with specified ID.
      */
-    public T1 topic(IgniteUuid id) {
+    public Object topic(IgniteUuid id) {
         return new T1(this, id);
     }
 
@@ -231,7 +231,7 @@ public enum GridTopic {
     }
 
     /** */
-    public static class T1 implements Externalizable {
+    private static class T1 implements Externalizable {
         /** */
         private static final long serialVersionUID = 0L;
 
@@ -252,19 +252,9 @@ public enum GridTopic {
          * @param topic Topic.
          * @param id ID.
          */
-        public T1(GridTopic topic, IgniteUuid id) {
+        private T1(GridTopic topic, IgniteUuid id) {
             this.topic = topic;
             this.id = id;
-        }
-
-        /** */
-        public GridTopic topic() {
-            return topic;
-        }
-
-        /** */
-        public IgniteUuid id() {
-            return id;
         }
 
         /** {@inheritDoc} */

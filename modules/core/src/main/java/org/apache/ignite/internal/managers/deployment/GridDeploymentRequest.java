@@ -19,7 +19,7 @@ package org.apache.ignite.internal.managers.deployment;
 
 import java.util.Collection;
 import java.util.UUID;
-import org.apache.ignite.internal.GridTopic;
+import org.apache.ignite.internal.GridTopicMessage;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
@@ -30,26 +30,21 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Deployment request.
  */
-// TODO CHECK
 public class GridDeploymentRequest implements Message {
-    /** Response topic. Response should be sent back to this topic. */
+    /** Response topic message. Response should be sent back to this topic. */
     @Order(0)
-    @Nullable GridTopic topic;
-
-    /** Topic ID. */
-    @Order(1)
-    @Nullable IgniteUuid topicId;
+    @Nullable GridTopicMessage topicMsg;
 
     /** Requested class name. */
-    @Order(2)
+    @Order(1)
     String rsrcName;
 
     /** Class loader ID. */
-    @Order(3)
+    @Order(2)
     @Nullable IgniteUuid ldrId;
 
     /** Nodes participating in request (chain). */
-    @Order(4)
+    @Order(3)
     @GridToStringInclude
     Collection<UUID> nodeIds;
 
@@ -67,9 +62,8 @@ public class GridDeploymentRequest implements Message {
      * @param ldrId Class loader ID.
      * @param rsrcName Resource name that should be found and sent back.
      */
-    GridDeploymentRequest(GridTopic.T1 topic, IgniteUuid ldrId, String rsrcName) {
-        this.topic = topic.topic();
-        topicId = topic.id();
+    GridDeploymentRequest(Object topic, IgniteUuid ldrId, String rsrcName) {
+        topicMsg = new GridTopicMessage(topic);
         this.ldrId = ldrId;
         this.rsrcName = rsrcName;
     }
@@ -88,10 +82,8 @@ public class GridDeploymentRequest implements Message {
      *
      * @return Response topic name.
      */
-    @Nullable GridTopic.T1 responseTopic() {
-        assert topic == null && topicId == null || topic != null && topicId != null;
-
-        return topic == null ? null : new GridTopic.T1(topic, topicId);
+    @Nullable Object responseTopic() {
+        return GridTopicMessage.topic(topicMsg);
     }
 
     /**
@@ -118,9 +110,7 @@ public class GridDeploymentRequest implements Message {
      * @return Property undeploy.
      */
     boolean undeploy() {
-        assert topic == null && topicId == null || topic != null && topicId != null;
-
-        return topic == null;
+        return topicMsg == null;
     }
 
     /**

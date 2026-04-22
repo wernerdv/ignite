@@ -79,6 +79,7 @@ import org.apache.ignite.events.DiscoveryEvent;
 import org.apache.ignite.events.Event;
 import org.apache.ignite.internal.GridKernalContext;
 import org.apache.ignite.internal.GridTopic;
+import org.apache.ignite.internal.GridTopicMessage;
 import org.apache.ignite.internal.IgniteClientDisconnectedCheckedException;
 import org.apache.ignite.internal.IgniteDeploymentCheckedException;
 import org.apache.ignite.internal.IgniteInternalFuture;
@@ -3502,8 +3503,6 @@ public class GridIoManager extends GridManagerAdapter<CommunicationSpi<Object>> 
                 assert msgBody != null || ioMsg.bodyBytes() != null;
 
                 try {
-                    Object msgTopic = ioMsg.topic();
-
                     GridDeployment dep = ioMsg.deployment();
 
                     if (dep == null && ctx.config().isPeerClassLoadingEnabled() &&
@@ -3525,6 +3524,16 @@ public class GridIoManager extends GridManagerAdapter<CommunicationSpi<Object>> 
                                     "GridPeerDeployAware interface. [msg=" + ioMsg + ']');
 
                         ioMsg.deployment(dep); // Cache deployment.
+                    }
+
+                    GridTopicMessage topicMsg = ioMsg.topicMessage();
+                    Object msgTopic = null;
+
+                    // Unmarshall message topic if needed.
+                    if (topicMsg != null) {
+                        topicMsg.unmarshal(marsh, U.resolveClassLoader(dep != null ? dep.classLoader() : null, ctx.config()));
+
+                        msgTopic = topicMsg.topic();
                     }
 
                     if (!Objects.equals(topic, msgTopic))

@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * User message wrapper.
  */
-// TODO CHECK
 public class GridIoUserMessage implements Message {
     /** Message body. */
     private Object body;
@@ -94,7 +93,7 @@ public class GridIoUserMessage implements Message {
         this.depClsName = depClsName;
 
         if (topic != null)
-            topicMsg = new GridTopicMessage(topic);
+            topicMsg = new GridTopicMessage(topic, true);
 
         this.depMode = depMode;
         this.clsLdrId = clsLdrId;
@@ -152,10 +151,10 @@ public class GridIoUserMessage implements Message {
     }
 
     /**
-     * @return Message topic.
+     * @return Topic message.
      */
-    @Nullable Object topic() {
-        return GridTopicMessage.topic(topicMsg);
+    @Nullable GridTopicMessage topicMessage() {
+        return topicMsg;
     }
 
     /**

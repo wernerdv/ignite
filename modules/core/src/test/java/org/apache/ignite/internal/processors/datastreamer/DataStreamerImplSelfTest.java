@@ -39,6 +39,7 @@ import org.apache.ignite.cache.CacheServerNotFoundException;
 import org.apache.ignite.cluster.ClusterNode;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.internal.GridTopicMessage;
 import org.apache.ignite.internal.IgniteEx;
 import org.apache.ignite.internal.IgniteInternalFuture;
 import org.apache.ignite.internal.managers.communication.GridIoMessage;
@@ -705,7 +706,7 @@ public class DataStreamerImplSelfTest extends GridCommonAbstractTest {
 
                         msg = new GridIoMessage(
                             GridTestUtils.<Byte>getFieldValue(ioMsg, "plc"),
-                            GridTestUtils.getFieldValue(ioMsg, "topic"),
+                            GridTopicMessage.topic(GridTestUtils.getFieldValue(ioMsg, "topicMsg")),
                             appMsg,
                             GridTestUtils.<Boolean>getFieldValue(ioMsg, "ordered"),
                             ioMsg.timeout(),
