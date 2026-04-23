@@ -93,13 +93,7 @@ public class GridTopicMessage implements MarshallableMessage {
         if (needCustomClsLdr)
             return;
 
-        if (ord < 0 && topicBytes != null) {
-            topic = U.unmarshal(marsh, topicBytes, clsLdr);
-
-            topicBytes = null;
-        }
-        else if (ord >= 0)
-            topic = GridTopic.fromOrdinal(ord);
+        unmarshal(marsh, clsLdr);
     }
 
     /**
