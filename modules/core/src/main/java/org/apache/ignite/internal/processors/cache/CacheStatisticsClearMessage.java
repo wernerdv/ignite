@@ -22,30 +22,25 @@ import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Cache statistics clear discovery message.
  */
-public class CacheStatisticsClearMessage implements DiscoveryCustomMessage {
+public class CacheStatisticsClearMessage extends DiscoveryCustomMessage {
     /** Initial message flag mask. */
     private static final byte INITIAL_MSG_MASK = 0x01;
 
-    /** Custom message ID. */
-    @Order(0)
-    IgniteUuid id;
-
     /** Request id. */
-    @Order(1)
+    @Order(0)
     UUID reqId;
 
     /** Cache names. */
-    @Order(2)
+    @Order(1)
     Collection<String> caches;
 
     /** Flags. */
-    @Order(3)
+    @Order(2)
     byte flags;
 
     /**
@@ -64,7 +59,6 @@ public class CacheStatisticsClearMessage implements DiscoveryCustomMessage {
         this.reqId = reqId;
         this.caches = caches;
 
-        id = IgniteUuid.randomUuid();
         flags = INITIAL_MSG_MASK;
     }
 
@@ -74,15 +68,9 @@ public class CacheStatisticsClearMessage implements DiscoveryCustomMessage {
      * @param msg Request message.
      */
     private CacheStatisticsClearMessage(CacheStatisticsClearMessage msg) {
-        id = IgniteUuid.randomUuid();
         reqId = msg.reqId;
         caches = null;
         flags = 0;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

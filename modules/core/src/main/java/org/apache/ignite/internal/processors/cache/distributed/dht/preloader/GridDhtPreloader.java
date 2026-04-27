@@ -193,8 +193,7 @@ public class GridDhtPreloader extends GridCachePreloaderAdapter {
                 ", grp=" + grp.name() +
                 ", topVer=" + top.readyTopologyVersion() + ']';
 
-        GridDhtPreloaderAssignments assignments = new GridDhtPreloaderAssignments(exchId, topVer,
-            exchFut != null && exchFut.affinityReassign());
+        GridDhtPreloaderAssignments assignments = new GridDhtPreloaderAssignments(exchId, topVer, false);
 
         AffinityAssignment aff = grp.affinity().cachedAffinity(topVer);
 

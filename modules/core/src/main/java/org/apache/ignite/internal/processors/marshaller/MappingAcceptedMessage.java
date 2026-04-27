@@ -20,21 +20,16 @@ package org.apache.ignite.internal.processors.marshaller;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Is sent as an acknowledgement for successfully proposed new mapping (see {@link MappingProposedMessage}).
- *
+ * <p>
  * If any nodes were waiting for this mapping to be accepted they will be unblocked on receiving this message.
  */
-public class MappingAcceptedMessage implements DiscoveryCustomMessage {
+public class MappingAcceptedMessage extends DiscoveryCustomMessage {
     /** */
     @Order(0)
-    IgniteUuid id;
-
-    /** */
-    @Order(1)
     MarshallerMappingItem item;
 
     /** */
@@ -46,13 +41,7 @@ public class MappingAcceptedMessage implements DiscoveryCustomMessage {
      * @param item Item.
      */
     MappingAcceptedMessage(MarshallerMappingItem item) {
-        id = IgniteUuid.randomUuid();
         this.item = item;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

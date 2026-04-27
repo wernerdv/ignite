@@ -22,17 +22,12 @@ import org.apache.ignite.internal.CoreMessagesProvider;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /** */
-public class DistributedMetaStorageUpdateAckMessage implements DiscoveryCustomMessage {
-    /** */
-    @Order(0)
-    IgniteUuid id;
-
+public class DistributedMetaStorageUpdateAckMessage extends DiscoveryCustomMessage {
     /** Request ID. */
-    @Order(1)
+    @Order(0)
     UUID reqId;
 
     /** Empty constructor of {@link CoreMessagesProvider}. */
@@ -42,13 +37,7 @@ public class DistributedMetaStorageUpdateAckMessage implements DiscoveryCustomMe
 
     /** */
     public DistributedMetaStorageUpdateAckMessage(UUID reqId) {
-        id = IgniteUuid.randomUuid();
         this.reqId = reqId;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** */

@@ -24,31 +24,26 @@ import org.apache.ignite.internal.processors.query.schema.SchemaOperationExcepti
 import org.apache.ignite.internal.processors.query.schema.operation.SchemaAbstractOperation;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Abstract discovery message for schema operations.
  */
-public abstract class SchemaAbstractDiscoveryMessage implements DiscoveryCustomMessage, Serializable {
+public abstract class SchemaAbstractDiscoveryMessage extends DiscoveryCustomMessage implements Serializable {
     /** */
     private static final long serialVersionUID = 0L;
 
-    /** ID */
-    @Order(0)
-    IgniteUuid id;
-
     /** Operation. */
     @GridToStringInclude
-    @Order(1)
+    @Order(0)
     SchemaAbstractOperation op;
 
     /** Error message. */
-    @Order(2)
+    @Order(1)
     transient String errMsg;
 
     /** Error code. */
-    @Order(3)
+    @Order(2)
     transient int errCode;
 
     /** Error. */
@@ -67,15 +62,9 @@ public abstract class SchemaAbstractDiscoveryMessage implements DiscoveryCustomM
      * @param op Operation.
      */
     protected SchemaAbstractDiscoveryMessage(SchemaAbstractOperation op) {
-        id = IgniteUuid.randomUuid();
         errCode = -1;
 
         this.op = op;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /**

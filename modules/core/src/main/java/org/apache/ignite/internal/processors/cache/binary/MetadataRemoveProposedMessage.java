@@ -22,7 +22,6 @@ import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.binary.BinaryMetadata;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,25 +29,21 @@ import org.jetbrains.annotations.Nullable;
  * discovery-based protocol for manage {@link BinaryMetadata metadata} describing objects in binary format
  * stored in Ignite caches.
  */
-public final class MetadataRemoveProposedMessage implements DiscoveryCustomMessage {
-    /** */
-    @Order(0)
-    IgniteUuid id;
-
+public final class MetadataRemoveProposedMessage extends DiscoveryCustomMessage {
     /** Node UUID which initiated metadata update. */
-    @Order(1)
+    @Order(0)
     UUID origNodeId;
 
     /** Metadata type id. */
-    @Order(2)
+    @Order(1)
     int typeId;
 
     /** Message received on coordinator. */
-    @Order(3)
+    @Order(2)
     boolean onCoordinator = true;
 
     /** */
-    @Order(4)
+    @Order(3)
     String errMsg;
 
     /** Constructor. */
@@ -63,14 +58,8 @@ public final class MetadataRemoveProposedMessage implements DiscoveryCustomMessa
     public MetadataRemoveProposedMessage(int typeId, UUID origNodeId) {
         assert origNodeId != null;
 
-        id = IgniteUuid.randomUuid();
         this.origNodeId = origNodeId;
         this.typeId = typeId;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

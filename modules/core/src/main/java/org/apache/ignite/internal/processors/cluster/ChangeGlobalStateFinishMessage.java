@@ -22,27 +22,20 @@ import org.apache.ignite.cluster.ClusterState;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
-/**
- *
- */
-public class ChangeGlobalStateFinishMessage implements DiscoveryCustomMessage {
-    /** Custom message ID. */
-    @Order(0)
-    IgniteUuid id;
-
+/** */
+public class ChangeGlobalStateFinishMessage extends DiscoveryCustomMessage {
     /** State change request ID. */
-    @Order(1)
+    @Order(0)
     UUID reqId;
 
     /** New cluster state. */
-    @Order(2)
+    @Order(1)
     ClusterState state;
 
     /** State change error. */
-    @Order(3)
+    @Order(2)
     boolean transitionRes;
 
     /** Constructor. */
@@ -63,7 +56,6 @@ public class ChangeGlobalStateFinishMessage implements DiscoveryCustomMessage {
         assert reqId != null;
         assert state != null;
 
-        id = IgniteUuid.randomUuid();
         this.reqId = reqId;
         this.state = state;
         this.transitionRes = transitionRes;
@@ -100,11 +92,6 @@ public class ChangeGlobalStateFinishMessage implements DiscoveryCustomMessage {
     }
 
     /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
-    }
-
-    /** {@inheritDoc} */
     @Nullable @Override public DiscoveryCustomMessage ackMessage() {
         return null;
     }
@@ -113,5 +100,4 @@ public class ChangeGlobalStateFinishMessage implements DiscoveryCustomMessage {
     @Override public String toString() {
         return S.toString(ChangeGlobalStateFinishMessage.class, this);
     }
-
 }

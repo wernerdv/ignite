@@ -29,18 +29,14 @@ import org.jetbrains.annotations.Nullable;
  * Is sent as an acknowledgement for end (with success or error) of user management operation on the cluster
  * (see {@link UserProposedMessage} and {@link UserManagementOperation}).
  */
-public class UserAcceptedMessage implements DiscoveryCustomMessage {
-    /** */
-    @Order(0)
-    IgniteUuid id;
-
+public class UserAcceptedMessage extends DiscoveryCustomMessage {
     /** Operation ID. */
-    @Order(1)
+    @Order(0)
     @GridToStringInclude
     IgniteUuid opId;
 
     /** Error message. */
-    @Order(2)
+    @Order(1)
     ErrorMessage errMsg;
 
     /** Constructor. */
@@ -55,17 +51,10 @@ public class UserAcceptedMessage implements DiscoveryCustomMessage {
     UserAcceptedMessage(IgniteUuid opId, Throwable error) {
         assert opId != null || error != null;
 
-        id = IgniteUuid.randomUuid();
-
         this.opId = opId;
 
         if (error != null)
             errMsg = new ErrorMessage(error);
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

@@ -19,11 +19,15 @@ package org.apache.ignite.internal.processors.cache;
 
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The task for changing transaction timeout on partition map exchange.
  */
-public class TxTimeoutOnPartitionMapExchangeChangeTask extends AbstractCachePartitionExchangeWorkerTask {
+public class TxTimeoutOnPartitionMapExchangeChangeTask implements CachePartitionExchangeWorkerTask {
+    /** Security context in which current task must be executed. */
+    private final @Nullable SecurityContext secCtx;
+
     /** Discovery message. */
     private final TxTimeoutOnPartitionMapExchangeChangeMessage msg;
 
@@ -33,10 +37,11 @@ public class TxTimeoutOnPartitionMapExchangeChangeTask extends AbstractCachePart
      * @param secCtx Security context in which current task must be executed.
      * @param msg Discovery message.
      */
-    public TxTimeoutOnPartitionMapExchangeChangeTask(SecurityContext secCtx, TxTimeoutOnPartitionMapExchangeChangeMessage msg) {
-        super(secCtx);
-
+    // TODO: no usages - remove?
+    public TxTimeoutOnPartitionMapExchangeChangeTask(@Nullable SecurityContext secCtx, TxTimeoutOnPartitionMapExchangeChangeMessage msg) {
         assert msg != null;
+
+        this.secCtx = secCtx;
         this.msg = msg;
     }
 
@@ -52,6 +57,11 @@ public class TxTimeoutOnPartitionMapExchangeChangeTask extends AbstractCachePart
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override public @Nullable SecurityContext securityContext() {
+        return secCtx;
     }
 
     /** {@inheritDoc} */

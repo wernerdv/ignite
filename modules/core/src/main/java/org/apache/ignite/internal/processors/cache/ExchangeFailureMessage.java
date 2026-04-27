@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * This class represents discovery message that is used to provide information about dynamic cache start failure.
  */
-public class ExchangeFailureMessage implements DiscoveryCustomMessage {
+public class ExchangeFailureMessage extends DiscoveryCustomMessage {
     /** Cache names. */
     @GridToStringInclude
     @Order(0)
@@ -50,7 +50,7 @@ public class ExchangeFailureMessage implements DiscoveryCustomMessage {
 
     /** Custom message ID. */
     @Order(1)
-    IgniteUuid id;
+    IgniteUuid msgId;
 
     /** */
     @Order(2)
@@ -86,7 +86,7 @@ public class ExchangeFailureMessage implements DiscoveryCustomMessage {
         assert !F.isEmpty(exchangeErrors);
         assert !F.isEmpty(cacheNames) : cacheNames;
 
-        this.id = IgniteUuid.fromUuid(locNode.id());
+        msgId = IgniteUuid.fromUuid(locNode.id());
         this.exchId = exchId;
         this.cacheNames = cacheNames;
         this.exchangeErrors = exchangeErrors.entrySet().stream().collect(
@@ -95,7 +95,7 @@ public class ExchangeFailureMessage implements DiscoveryCustomMessage {
 
     /** {@inheritDoc} */
     @Override public IgniteUuid id() {
-        return id;
+        return msgId;
     }
 
     /**

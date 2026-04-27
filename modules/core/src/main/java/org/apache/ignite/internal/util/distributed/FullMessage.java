@@ -26,7 +26,6 @@ import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.distributed.DistributedProcess.DistributedProcessType;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.Message;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
@@ -39,25 +38,21 @@ import org.jetbrains.annotations.Nullable;
  * @see InitMessage
  * @see SingleNodeMessage
  */
-public class FullMessage<R extends Message> implements DiscoveryCustomMessage {
-    /** Custom message ID. */
-    @Order(0)
-    IgniteUuid id;
-
+public class FullMessage<R extends Message> extends DiscoveryCustomMessage {
     /** Process id. */
-    @Order(1)
+    @Order(0)
     UUID processId;
 
     /** Process type. */
-    @Order(2)
+    @Order(1)
     int type;
 
     /** Results. */
-    @Order(3)
+    @Order(2)
     Map<UUID, R> res;
 
     /** Errors. */
-    @Order(4)
+    @Order(3)
     Map<UUID, ErrorMessage> err;
 
     /** Default constructor for {@link MessageFactory}. */
@@ -72,7 +67,6 @@ public class FullMessage<R extends Message> implements DiscoveryCustomMessage {
      * @param err Errors
      */
     public FullMessage(UUID processId, DistributedProcessType type, Map<UUID, R> res, Map<UUID, Throwable> err) {
-        this.id = IgniteUuid.randomUuid();
         this.processId = processId;
         this.type = type.ordinal();
         this.res = res;
@@ -84,11 +78,6 @@ public class FullMessage<R extends Message> implements DiscoveryCustomMessage {
 
             this.err = errMsgs;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

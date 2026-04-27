@@ -22,7 +22,6 @@ import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.managers.discovery.DiscoveryServerOnlyCustomMessage;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,13 +31,9 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * {@link UserAcceptedMessage} is sent as an acknowledgement that operation is finished on the all nodes of the cluster.
  */
-public class UserProposedMessage implements DiscoveryServerOnlyCustomMessage {
+public class UserProposedMessage extends DiscoveryServerOnlyCustomMessage {
     /** */
     @Order(0)
-    IgniteUuid id;
-
-    /** */
-    @Order(1)
     @GridToStringInclude
     UserManagementOperation op;
 
@@ -54,17 +49,9 @@ public class UserProposedMessage implements DiscoveryServerOnlyCustomMessage {
         assert op != null;
 
         this.op = op;
-        id = IgniteUuid.randomUuid();
     }
 
     /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Nullable @Override public DiscoveryCustomMessage ackMessage() {
         return null;
     }

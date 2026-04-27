@@ -21,27 +21,22 @@ import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Discovery message for changing transaction timeout on partition map exchange.
  */
-public class TxTimeoutOnPartitionMapExchangeChangeMessage implements DiscoveryCustomMessage {
-    /** */
-    @Order(0)
-    IgniteUuid id;
-
+public class TxTimeoutOnPartitionMapExchangeChangeMessage extends DiscoveryCustomMessage {
     /** Request ID. */
-    @Order(1)
+    @Order(0)
     UUID reqId;
 
     /** Transaction timeout on partition map exchange in milliseconds. */
-    @Order(2)
+    @Order(1)
     long timeout;
 
     /** Init flag. */
-    @Order(3)
+    @Order(2)
     boolean isInit;
 
     /** */
@@ -55,7 +50,6 @@ public class TxTimeoutOnPartitionMapExchangeChangeMessage implements DiscoveryCu
      * @param req Request message.
      */
     public TxTimeoutOnPartitionMapExchangeChangeMessage(TxTimeoutOnPartitionMapExchangeChangeMessage req) {
-        id = IgniteUuid.randomUuid();
         reqId = req.reqId;
         timeout = req.timeout;
         isInit = false;
@@ -68,15 +62,9 @@ public class TxTimeoutOnPartitionMapExchangeChangeMessage implements DiscoveryCu
      * @param timeout Transaction timeout on partition map exchange in milliseconds.
      */
     public TxTimeoutOnPartitionMapExchangeChangeMessage(UUID reqId, long timeout) {
-        id = IgniteUuid.randomUuid();
         this.reqId = reqId;
         this.timeout = timeout;
         isInit = true;
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

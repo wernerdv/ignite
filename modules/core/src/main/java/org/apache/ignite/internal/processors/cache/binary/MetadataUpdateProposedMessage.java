@@ -27,7 +27,6 @@ import org.apache.ignite.internal.managers.communication.ErrorMessage;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
-import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.marshaller.Marshaller;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,36 +72,32 @@ import org.jetbrains.annotations.Nullable;
  * it gets blocked until {@link MetadataUpdateAcceptedMessage} arrives with <b>accepted version</b>
  * equals to <b>pending version</b> of this metadata to the moment when is was initially read by the thread.
  */
-public final class MetadataUpdateProposedMessage implements DiscoveryCustomMessage, MarshallableMessage {
-    /** */
-    @Order(0)
-    IgniteUuid id;
-
+public final class MetadataUpdateProposedMessage extends DiscoveryCustomMessage implements MarshallableMessage {
     /** Node UUID which initiated metadata update. */
-    @Order(1)
+    @Order(0)
     UUID origNodeId;
 
     /** */
     private BinaryMetadata metadata;
 
     /** Serialized {@link #metadata}. */
-    @Order(2)
+    @Order(1)
     byte[] metadataBytes;
 
     /** Metadata type id. */
-    @Order(3)
+    @Order(2)
     int typeId;
 
     /** Metadata version which is pending for update. */
-    @Order(4)
+    @Order(3)
     int pendingVer;
 
     /** Metadata version which is already accepted by entire cluster. */
-    @Order(5)
+    @Order(4)
     int acceptedVer;
 
     /** */
-    @Order(6)
+    @Order(5)
     @Nullable ErrorMessage errMsg;
 
     /** Constructor. */
@@ -118,16 +113,10 @@ public final class MetadataUpdateProposedMessage implements DiscoveryCustomMessa
         assert origNodeId != null;
         assert metadata != null;
 
-        id = IgniteUuid.randomUuid();
         this.origNodeId = origNodeId;
 
         this.metadata = metadata;
         typeId = metadata.typeId();
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
     }
 
     /** {@inheritDoc} */

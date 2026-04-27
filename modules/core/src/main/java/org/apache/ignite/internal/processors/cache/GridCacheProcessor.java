@@ -121,7 +121,7 @@ import org.apache.ignite.internal.processors.cache.persistence.metastorage.Metas
 import org.apache.ignite.internal.processors.cache.persistence.metastorage.ReadOnlyMetastorage;
 import org.apache.ignite.internal.processors.cache.persistence.partstate.GroupPartitionId;
 import org.apache.ignite.internal.processors.cache.persistence.snapshot.IgniteSnapshotManager;
-import org.apache.ignite.internal.processors.cache.persistence.snapshot.SnapshotDiscoveryMessage;
+import org.apache.ignite.internal.processors.cache.persistence.snapshot.SnapshotStartDiscoveryMessage;
 import org.apache.ignite.internal.processors.cache.persistence.tree.reuse.ReuseList;
 import org.apache.ignite.internal.processors.cache.persistence.wal.FileWriteAheadLogManager;
 import org.apache.ignite.internal.processors.cache.query.GridCacheDistributedQueryManager;
@@ -4237,8 +4237,8 @@ public class GridCacheProcessor extends GridProcessorAdapter {
         if (msg instanceof CacheAffinityChangeMessage)
             return sharedCtx.affinity().onCustomEvent(((CacheAffinityChangeMessage)msg));
 
-        if (msg instanceof SnapshotDiscoveryMessage &&
-            ((SnapshotDiscoveryMessage)msg).needExchange())
+        if (msg instanceof SnapshotStartDiscoveryMessage &&
+            ((SnapshotStartDiscoveryMessage)msg).needExchange())
             return true;
 
         if (msg instanceof WalStateAbstractMessage) {

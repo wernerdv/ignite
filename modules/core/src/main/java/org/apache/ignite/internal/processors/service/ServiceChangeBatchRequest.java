@@ -25,21 +25,16 @@ import org.apache.ignite.internal.util.tostring.GridToStringExclude;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Service change batch request discovery message.
  */
-public class ServiceChangeBatchRequest implements DiscoveryCustomMessage {
-    /** Unique custom message ID. */
-    @Order(0)
-    IgniteUuid id;
-
+public class ServiceChangeBatchRequest extends DiscoveryCustomMessage {
     /** Change requests. */
     @GridToStringInclude
-    @Order(1)
+    @Order(0)
     Collection<ServiceChangeAbstractRequest> reqs;
 
     /** Services deployment actions to be processed on services deployment process. */
@@ -56,7 +51,6 @@ public class ServiceChangeBatchRequest implements DiscoveryCustomMessage {
     public ServiceChangeBatchRequest(Collection<ServiceChangeAbstractRequest> reqs) {
         assert !F.isEmpty(reqs);
 
-        id = IgniteUuid.randomUuid();
         this.reqs = reqs;
     }
 
@@ -82,13 +76,7 @@ public class ServiceChangeBatchRequest implements DiscoveryCustomMessage {
     }
 
     /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return id;
-    }
-
-    /** {@inheritDoc} */
     @Nullable @Override public DiscoveryCustomMessage ackMessage() {
-        // No-op.
         return null;
     }
 

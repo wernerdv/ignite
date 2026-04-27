@@ -20,33 +20,28 @@ package org.apache.ignite.internal.processors.cache;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.ignite.IgniteCheckedException;
-import org.apache.ignite.internal.MarshallableMessage;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.apache.ignite.internal.util.typedef.internal.U;
 import org.apache.ignite.lang.IgniteUuid;
-import org.apache.ignite.marshaller.Marshaller;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Dummy discovery message which is not really sent via ring, it is just added in local discovery worker queue.
  */
-public class ClientCacheChangeDummyDiscoveryMessage extends AbstractCachePartitionExchangeWorkerTask
-    implements DiscoveryCustomMessage, MarshallableMessage {
+public class ClientCacheChangeDummyDiscoveryMessage extends DiscoveryCustomMessage implements CachePartitionExchangeWorkerTask {
+    /** Security context in which current task must be executed. */
+    private final @Nullable SecurityContext secCtx;
+
     /** */
     @Order(0)
     UUID reqId;
 
     /** */
-    Map<String, DynamicCacheChangeRequest> startReqs;
-
-    /** JDK Serialized version of startReqs. */
     @Order(1)
-    byte[] startRequestsBytes;
+    Map<String, DynamicCacheChangeRequest> startReqs;
 
     /** */
     @GridToStringInclude
@@ -55,7 +50,7 @@ public class ClientCacheChangeDummyDiscoveryMessage extends AbstractCachePartiti
 
     /** */
     public ClientCacheChangeDummyDiscoveryMessage() {
-        super(null);
+        secCtx = null;
     }
 
     /**
@@ -65,16 +60,15 @@ public class ClientCacheChangeDummyDiscoveryMessage extends AbstractCachePartiti
      * @param cachesToClose Cache to close.
      */
     public ClientCacheChangeDummyDiscoveryMessage(
-        SecurityContext secCtx,
+        @Nullable SecurityContext secCtx,
         UUID reqId,
         @Nullable Map<String, DynamicCacheChangeRequest> startReqs,
         @Nullable Set<String> cachesToClose
     ) {
-        super(secCtx);
-
         assert reqId != null;
         assert startReqs != null ^ cachesToClose != null;
 
+        this.secCtx = secCtx;
         this.reqId = reqId;
         this.startReqs = startReqs;
         this.cachesToClose = cachesToClose;
@@ -83,6 +77,11 @@ public class ClientCacheChangeDummyDiscoveryMessage extends AbstractCachePartiti
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override public @Nullable SecurityContext securityContext() {
+        return secCtx;
     }
 
     /**
@@ -114,18 +113,6 @@ public class ClientCacheChangeDummyDiscoveryMessage extends AbstractCachePartiti
     /** {@inheritDoc} */
     @Nullable @Override public DiscoveryCustomMessage ackMessage() {
         throw new UnsupportedOperationException();
-    }
-
-    /** {@inheritDoc} */
-    @Override public void prepareMarshal(Marshaller marsh) throws IgniteCheckedException {
-        if (startReqs != null)
-            startRequestsBytes = U.marshal(marsh, startReqs);
-    }
-
-    /** {@inheritDoc} */
-    @Override public void finishUnmarshal(Marshaller marsh, ClassLoader clsLdr) throws IgniteCheckedException {
-        if (startRequestsBytes != null)
-            startReqs = U.unmarshal(marsh, startRequestsBytes, clsLdr);
     }
 
     /** {@inheritDoc} */
