@@ -35,7 +35,6 @@ import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
-import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,8 +77,6 @@ public class ExchangeFailureMessage extends DiscoveryCustomMessage {
         Map<UUID, Throwable> exchangeErrors,
         Collection<String> cacheNames
     ) {
-        super(IgniteUuid.fromUuid(locNode.id()));
-
         assert exchId != null;
         assert !F.isEmpty(exchangeErrors);
         assert !F.isEmpty(cacheNames) : cacheNames;
