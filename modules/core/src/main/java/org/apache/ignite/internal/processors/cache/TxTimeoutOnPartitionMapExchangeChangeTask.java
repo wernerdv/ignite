@@ -37,7 +37,6 @@ public class TxTimeoutOnPartitionMapExchangeChangeTask implements CachePartition
      * @param secCtx Security context in which current task must be executed.
      * @param msg Discovery message.
      */
-    // TODO: no usages - remove?
     public TxTimeoutOnPartitionMapExchangeChangeTask(@Nullable SecurityContext secCtx, TxTimeoutOnPartitionMapExchangeChangeMessage msg) {
         assert msg != null;
 
