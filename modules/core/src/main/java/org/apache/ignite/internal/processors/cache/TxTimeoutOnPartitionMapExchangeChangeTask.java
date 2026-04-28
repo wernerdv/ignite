@@ -37,7 +37,6 @@ public class TxTimeoutOnPartitionMapExchangeChangeTask extends AbstractCachePart
         super(secCtx);
 
         assert msg != null;
-
         this.msg = msg;
     }
 
