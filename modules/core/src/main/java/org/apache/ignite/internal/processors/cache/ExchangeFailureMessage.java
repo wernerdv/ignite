@@ -48,17 +48,13 @@ public class ExchangeFailureMessage extends DiscoveryCustomMessage {
     @Order(0)
     Collection<String> cacheNames;
 
-    /** Custom message ID. */
-    @Order(1)
-    IgniteUuid msgId;
-
     /** */
-    @Order(2)
+    @Order(1)
     GridDhtPartitionExchangeId exchId;
 
     /** */
     @GridToStringInclude
-    @Order(3)
+    @Order(2)
     Map<UUID, ErrorMessage> exchangeErrors;
 
     /** Actions to be done to rollback changes done before the exchange failure. */
@@ -82,20 +78,16 @@ public class ExchangeFailureMessage extends DiscoveryCustomMessage {
         Map<UUID, Throwable> exchangeErrors,
         Collection<String> cacheNames
     ) {
+        super(IgniteUuid.fromUuid(locNode.id()));
+
         assert exchId != null;
         assert !F.isEmpty(exchangeErrors);
         assert !F.isEmpty(cacheNames) : cacheNames;
 
-        msgId = IgniteUuid.fromUuid(locNode.id());
         this.exchId = exchId;
         this.cacheNames = cacheNames;
         this.exchangeErrors = exchangeErrors.entrySet().stream().collect(
             Collectors.toMap(Map.Entry::getKey, e -> new ErrorMessage(e.getValue()), (a, b) -> a, HashMap::new));
-    }
-
-    /** {@inheritDoc} */
-    @Override public IgniteUuid id() {
-        return msgId;
     }
 
     /**
