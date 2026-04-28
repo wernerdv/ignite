@@ -17,18 +17,14 @@
 
 package org.apache.ignite.internal.processors.cache.distributed.dht.preloader;
 
-import org.apache.ignite.internal.processors.cache.CachePartitionExchangeWorkerTask;
+import org.apache.ignite.internal.processors.cache.AbstractCachePartitionExchangeWorkerTask;
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.future.GridCompoundFuture;
-import org.jetbrains.annotations.Nullable;
 
 /**
  *
  */
-public class ForceRebalanceExchangeTask implements CachePartitionExchangeWorkerTask {
-    /** Security context in which current task must be executed. */
-    private final @Nullable SecurityContext secCtx;
-
+public class ForceRebalanceExchangeTask extends AbstractCachePartitionExchangeWorkerTask {
     /** */
     private final GridDhtPartitionExchangeId exchId;
 
@@ -41,14 +37,15 @@ public class ForceRebalanceExchangeTask implements CachePartitionExchangeWorkerT
      * @param forcedRebFut Rebalance future.
      */
     public ForceRebalanceExchangeTask(
-        @Nullable SecurityContext secCtx,
+        SecurityContext secCtx,
         GridDhtPartitionExchangeId exchId,
         GridCompoundFuture<Boolean, Boolean> forcedRebFut
     ) {
+        super(secCtx);
+
         assert exchId != null;
         assert forcedRebFut != null;
 
-        this.secCtx = secCtx;
         this.exchId = exchId;
         this.forcedRebFut = forcedRebFut;
     }
@@ -56,11 +53,6 @@ public class ForceRebalanceExchangeTask implements CachePartitionExchangeWorkerT
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override public @Nullable SecurityContext securityContext() {
-        return secCtx;
     }
 
     /**

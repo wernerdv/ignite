@@ -18,19 +18,15 @@
 package org.apache.ignite.internal.processors.query.schema;
 
 import org.apache.ignite.cluster.ClusterNode;
-import org.apache.ignite.internal.processors.cache.CachePartitionExchangeWorkerTask;
+import org.apache.ignite.internal.processors.cache.AbstractCachePartitionExchangeWorkerTask;
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Node leave exchange worker task.
  */
-public class SchemaNodeLeaveExchangeWorkerTask implements CachePartitionExchangeWorkerTask {
-    /** Security context in which current task must be executed. */
-    private final @Nullable SecurityContext secCtx;
-
+public class SchemaNodeLeaveExchangeWorkerTask extends AbstractCachePartitionExchangeWorkerTask {
     /** Node. */
     @GridToStringInclude
     private final ClusterNode node;
@@ -41,19 +37,15 @@ public class SchemaNodeLeaveExchangeWorkerTask implements CachePartitionExchange
      * @param secCtx Security context in which current task must be executed.
      * @param node Node.
      */
-    public SchemaNodeLeaveExchangeWorkerTask(@Nullable SecurityContext secCtx, ClusterNode node) {
-        this.secCtx = secCtx;
+    public SchemaNodeLeaveExchangeWorkerTask(SecurityContext secCtx, ClusterNode node) {
+        super(secCtx);
+
         this.node = node;
     }
 
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override public @Nullable SecurityContext securityContext() {
-        return secCtx;
     }
 
     /**

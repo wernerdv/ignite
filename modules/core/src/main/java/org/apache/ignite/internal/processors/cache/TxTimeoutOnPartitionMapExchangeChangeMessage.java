@@ -51,6 +51,8 @@ public class TxTimeoutOnPartitionMapExchangeChangeMessage extends DiscoveryCusto
      * @param req Request message.
      */
     private TxTimeoutOnPartitionMapExchangeChangeMessage(TxTimeoutOnPartitionMapExchangeChangeMessage req) {
+        super(IgniteUuid.randomUuid());
+
         reqId = req.reqId;
         timeout = req.timeout;
         isInit = false;

@@ -17,17 +17,13 @@
 
 package org.apache.ignite.internal.processors.cache.distributed.dht.preloader;
 
-import org.apache.ignite.internal.processors.cache.CachePartitionExchangeWorkerTask;
+import org.apache.ignite.internal.processors.cache.AbstractCachePartitionExchangeWorkerTask;
 import org.apache.ignite.internal.processors.security.SecurityContext;
-import org.jetbrains.annotations.Nullable;
 
 /**
  *
  */
-public class RebalanceReassignExchangeTask implements CachePartitionExchangeWorkerTask {
-    /** Security context in which current task must be executed. */
-    private final @Nullable SecurityContext secCtx;
-
+public class RebalanceReassignExchangeTask extends AbstractCachePartitionExchangeWorkerTask {
     /** */
     private final GridDhtPartitionExchangeId exchId;
 
@@ -40,14 +36,15 @@ public class RebalanceReassignExchangeTask implements CachePartitionExchangeWork
      * @param exchFut Exchange future.
      */
     public RebalanceReassignExchangeTask(
-        @Nullable SecurityContext secCtx,
+        SecurityContext secCtx,
         GridDhtPartitionExchangeId exchId,
         GridDhtPartitionsExchangeFuture exchFut
     ) {
+        super(secCtx);
+
         assert exchId != null;
         assert exchFut != null;
 
-        this.secCtx = secCtx;
         this.exchId = exchId;
         this.exchFut = exchFut;
     }
@@ -55,11 +52,6 @@ public class RebalanceReassignExchangeTask implements CachePartitionExchangeWork
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override public @Nullable SecurityContext securityContext() {
-        return secCtx;
     }
 
     /**

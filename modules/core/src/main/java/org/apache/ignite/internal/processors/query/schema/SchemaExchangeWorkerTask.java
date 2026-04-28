@@ -17,19 +17,15 @@
 
 package org.apache.ignite.internal.processors.query.schema;
 
-import org.apache.ignite.internal.processors.cache.CachePartitionExchangeWorkerTask;
+import org.apache.ignite.internal.processors.cache.AbstractCachePartitionExchangeWorkerTask;
 import org.apache.ignite.internal.processors.query.schema.message.SchemaAbstractDiscoveryMessage;
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.typedef.internal.S;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Cache schema change task for exchange worker.
  */
-public class SchemaExchangeWorkerTask implements CachePartitionExchangeWorkerTask {
-    /** Security context in which current task must be executed. */
-    private final @Nullable SecurityContext secCtx;
-
+public class SchemaExchangeWorkerTask extends AbstractCachePartitionExchangeWorkerTask {
     /** Message. */
     private final SchemaAbstractDiscoveryMessage msg;
 
@@ -39,21 +35,17 @@ public class SchemaExchangeWorkerTask implements CachePartitionExchangeWorkerTas
      * @param secCtx Security context in which current task must be executed.
      * @param msg Message.
      */
-    public SchemaExchangeWorkerTask(@Nullable SecurityContext secCtx, SchemaAbstractDiscoveryMessage msg) {
+    public SchemaExchangeWorkerTask(SecurityContext secCtx, SchemaAbstractDiscoveryMessage msg) {
+        super(secCtx);
+
         assert msg != null;
 
-        this.secCtx = secCtx;
         this.msg = msg;
     }
 
     /** {@inheritDoc} */
     @Override public boolean skipForExchangeMerge() {
         return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override public @Nullable SecurityContext securityContext() {
-        return secCtx;
     }
 
     /**

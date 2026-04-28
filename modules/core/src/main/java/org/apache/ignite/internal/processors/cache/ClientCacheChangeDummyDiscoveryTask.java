@@ -17,36 +17,24 @@
 
 package org.apache.ignite.internal.processors.cache;
 
-import org.apache.ignite.cluster.ClusterNode;
 import org.apache.ignite.internal.processors.security.SecurityContext;
 import org.apache.ignite.internal.util.typedef.internal.S;
 
-/**
- * Exchange task to handle node leave for WAL state manager.
- */
-public class WalStateNodeLeaveExchangeTask extends AbstractCachePartitionExchangeWorkerTask {
-    /** Node that has left the grid. */
-    private final ClusterNode node;
+/** Client cache change dummy task for exchange worker. */
+public class ClientCacheChangeDummyDiscoveryTask extends AbstractCachePartitionExchangeWorkerTask {
+    /** Discovery message. */
+    private final ClientCacheChangeDummyDiscoveryMessage msg;
 
     /**
-     * Constructor.
-     *
      * @param secCtx Security context in which current task must be executed.
-     * @param node Node that has left the grid.
+     * @param msg Message.
      */
-    public WalStateNodeLeaveExchangeTask(SecurityContext secCtx, ClusterNode node) {
+    public ClientCacheChangeDummyDiscoveryTask(SecurityContext secCtx, ClientCacheChangeDummyDiscoveryMessage msg) {
         super(secCtx);
 
-        assert node != null;
+        assert msg != null;
 
-        this.node = node;
-    }
-
-    /**
-     * @return Node that has left the grid.
-     */
-    public ClusterNode node() {
-        return node;
+        this.msg = msg;
     }
 
     /** {@inheritDoc} */
@@ -54,8 +42,13 @@ public class WalStateNodeLeaveExchangeTask extends AbstractCachePartitionExchang
         return true;
     }
 
+    /** @return Message. */
+    public ClientCacheChangeDummyDiscoveryMessage message() {
+        return msg;
+    }
+
     /** {@inheritDoc} */
     @Override public String toString() {
-        return S.toString(WalStateNodeLeaveExchangeTask.class, this);
+        return S.toString(ClientCacheChangeDummyDiscoveryTask.class, this);
     }
 }

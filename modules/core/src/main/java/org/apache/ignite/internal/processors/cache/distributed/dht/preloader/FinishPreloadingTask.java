@@ -18,17 +18,13 @@
 package org.apache.ignite.internal.processors.cache.distributed.dht.preloader;
 
 import org.apache.ignite.internal.processors.affinity.AffinityTopologyVersion;
-import org.apache.ignite.internal.processors.cache.CachePartitionExchangeWorkerTask;
+import org.apache.ignite.internal.processors.cache.AbstractCachePartitionExchangeWorkerTask;
 import org.apache.ignite.internal.processors.security.SecurityContext;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A task for finishing preloading future in exchange worker thread.
  */
-public class FinishPreloadingTask implements CachePartitionExchangeWorkerTask {
-    /** Security context in which current task must be executed. */
-    private final @Nullable SecurityContext secCtx;
-
+public class FinishPreloadingTask extends AbstractCachePartitionExchangeWorkerTask {
     /** Topology version. */
     private final AffinityTopologyVersion topVer;
 
@@ -42,8 +38,9 @@ public class FinishPreloadingTask implements CachePartitionExchangeWorkerTask {
      * @param secCtx Security context in which current task must be executed.
      * @param topVer Topology version.
      */
-    public FinishPreloadingTask(@Nullable SecurityContext secCtx, AffinityTopologyVersion topVer, int grpId, long rebalanceId) {
-        this.secCtx = secCtx;
+    public FinishPreloadingTask(SecurityContext secCtx, AffinityTopologyVersion topVer, int grpId, long rebalanceId) {
+        super(secCtx);
+
         this.grpId = grpId;
         this.topVer = topVer;
         this.rebalanceId = rebalanceId;
@@ -54,11 +51,6 @@ public class FinishPreloadingTask implements CachePartitionExchangeWorkerTask {
      */
     @Override public boolean skipForExchangeMerge() {
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override public @Nullable SecurityContext securityContext() {
-        return secCtx;
     }
 
     /**
