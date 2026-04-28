@@ -62,6 +62,8 @@ public class CacheStatisticsModeChangeMessage extends DiscoveryCustomMessage {
      * @param req Request message.
      */
     private CacheStatisticsModeChangeMessage(CacheStatisticsModeChangeMessage req) {
+        super(IgniteUuid.randomUuid());
+
         reqId = req.reqId;
         caches = null;
 
