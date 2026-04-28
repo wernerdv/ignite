@@ -71,6 +71,8 @@ public class CacheStatisticsClearMessage extends DiscoveryCustomMessage {
      * @param msg Request message.
      */
     private CacheStatisticsClearMessage(CacheStatisticsClearMessage msg) {
+        super(IgniteUuid.randomUuid());
+
         reqId = msg.reqId;
         caches = null;
         flags = 0;
