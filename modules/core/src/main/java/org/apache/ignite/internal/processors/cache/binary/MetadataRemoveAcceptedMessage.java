@@ -20,6 +20,7 @@ package org.apache.ignite.internal.processors.cache.binary;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -46,6 +47,8 @@ public class MetadataRemoveAcceptedMessage extends DiscoveryCustomMessage {
      * @param typeId Type id.
      */
     MetadataRemoveAcceptedMessage(int typeId) {
+        super(IgniteUuid.randomUuid());
+
         this.typeId = typeId;
     }
 

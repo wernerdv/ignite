@@ -23,6 +23,7 @@ import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,6 +74,8 @@ public class CacheStatisticsModeChangeMessage extends DiscoveryCustomMessage {
      * @param caches Collection of cache names.
      */
     public CacheStatisticsModeChangeMessage(Collection<String> caches, boolean enabled) {
+        super(IgniteUuid.randomUuid());
+
         reqId = UUID.randomUUID();
         this.caches = Collections.unmodifiableCollection(caches);
 

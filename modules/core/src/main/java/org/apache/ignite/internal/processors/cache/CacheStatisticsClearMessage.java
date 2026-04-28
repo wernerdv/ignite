@@ -22,6 +22,7 @@ import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -56,6 +57,8 @@ public class CacheStatisticsClearMessage extends DiscoveryCustomMessage {
      * @param caches Collection of cache names.
      */
     public CacheStatisticsClearMessage(UUID reqId, Collection<String> caches) {
+        super(IgniteUuid.randomUuid());
+
         this.reqId = reqId;
         this.caches = caches;
 

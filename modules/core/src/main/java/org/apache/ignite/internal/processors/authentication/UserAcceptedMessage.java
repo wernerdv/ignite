@@ -49,6 +49,8 @@ public class UserAcceptedMessage extends DiscoveryCustomMessage {
      * @param error Error.
      */
     UserAcceptedMessage(IgniteUuid opId, Throwable error) {
+        super(IgniteUuid.randomUuid());
+
         assert opId != null || error != null;
 
         this.opId = opId;

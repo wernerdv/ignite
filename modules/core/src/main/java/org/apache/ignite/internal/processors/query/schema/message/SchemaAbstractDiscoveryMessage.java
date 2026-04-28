@@ -24,6 +24,7 @@ import org.apache.ignite.internal.processors.query.schema.SchemaOperationExcepti
 import org.apache.ignite.internal.processors.query.schema.operation.SchemaAbstractOperation;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -62,6 +63,8 @@ public abstract class SchemaAbstractDiscoveryMessage extends DiscoveryCustomMess
      * @param op Operation.
      */
     protected SchemaAbstractDiscoveryMessage(SchemaAbstractOperation op) {
+        super(IgniteUuid.randomUuid());
+
         errCode = -1;
 
         this.op = op;

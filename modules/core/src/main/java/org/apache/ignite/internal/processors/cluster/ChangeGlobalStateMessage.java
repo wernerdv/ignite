@@ -33,6 +33,7 @@ import org.apache.ignite.internal.processors.service.ServiceDeploymentActions;
 import org.apache.ignite.internal.util.tostring.GridToStringExclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.marshaller.Marshaller;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,6 +107,8 @@ public class ChangeGlobalStateMessage extends DiscoveryCustomMessage implements 
         boolean forceChangeBaselineTopology,
         long timestamp
     ) {
+        super(IgniteUuid.randomUuid());
+
         assert reqId != null;
         assert initiatingNodeId != null;
 

@@ -22,6 +22,7 @@ import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.binary.BinaryMetadata;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -56,6 +57,8 @@ public final class MetadataRemoveProposedMessage extends DiscoveryCustomMessage 
      * @param origNodeId ID of node requested update.
      */
     public MetadataRemoveProposedMessage(int typeId, UUID origNodeId) {
+        super(IgniteUuid.randomUuid());
+
         assert origNodeId != null;
 
         this.origNodeId = origNodeId;

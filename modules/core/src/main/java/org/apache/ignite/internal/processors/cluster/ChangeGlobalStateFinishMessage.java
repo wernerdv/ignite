@@ -22,6 +22,7 @@ import org.apache.ignite.cluster.ClusterState;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /** */
@@ -53,6 +54,8 @@ public class ChangeGlobalStateFinishMessage extends DiscoveryCustomMessage {
         ClusterState state,
         boolean transitionRes
     ) {
+        super(IgniteUuid.randomUuid());
+
         assert reqId != null;
         assert state != null;
 

@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -69,6 +70,8 @@ public class MappingProposedMessage extends DiscoveryCustomMessage {
      * @param origNodeId Orig node id.
      */
     MappingProposedMessage(MarshallerMappingItem mappingItem, UUID origNodeId) {
+        super(IgniteUuid.randomUuid());
+
         assert origNodeId != null;
 
         this.mappingItem = mappingItem;

@@ -27,6 +27,7 @@ import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -54,6 +55,8 @@ public class ClientCacheChangeDiscoveryMessage extends DiscoveryCustomMessage {
      * @param closedCaches Closed caches.
      */
     public ClientCacheChangeDiscoveryMessage(Map<Integer, Boolean> startedCaches, Set<Integer> closedCaches) {
+        super(IgniteUuid.randomUuid());
+
         this.startedCaches = startedCaches;
         this.closedCaches = closedCaches;
     }

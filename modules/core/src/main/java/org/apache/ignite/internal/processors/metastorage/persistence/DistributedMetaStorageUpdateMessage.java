@@ -25,6 +25,7 @@ import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.marshaller.Marshaller;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +56,8 @@ public class DistributedMetaStorageUpdateMessage extends DiscoveryCustomMessage 
 
     /** */
     public DistributedMetaStorageUpdateMessage(UUID reqId, String key, @Nullable Serializable val) {
+        super(IgniteUuid.randomUuid());
+
         this.reqId = reqId;
         this.key = key;
         this.val = val;

@@ -19,6 +19,7 @@ package org.apache.ignite.spi.discovery;
 
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.managers.discovery.DiscoveryServerOnlyCustomMessage;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class MessageForServer extends DiscoveryServerOnlyCustomMessage {
     /** Constructor for {@link MessageFactory}. */
     public MessageForServer() {
-        // No-op.
+        super(IgniteUuid.randomUuid());
     }
 
     /** {@inheritDoc} */

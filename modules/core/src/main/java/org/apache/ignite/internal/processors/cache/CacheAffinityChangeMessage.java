@@ -81,6 +81,8 @@ public class CacheAffinityChangeMessage extends DiscoveryCustomMessage {
      * @param cacheDeploymentIds Cache deployment ID.
      */
     public CacheAffinityChangeMessage(AffinityTopologyVersion topVer, Map<Integer, IgniteUuid> cacheDeploymentIds) {
+        super(IgniteUuid.randomUuid());
+
         this.topVer = topVer;
         this.cacheDeploymentIds = cacheDeploymentIds;
     }
@@ -95,7 +97,10 @@ public class CacheAffinityChangeMessage extends DiscoveryCustomMessage {
     public CacheAffinityChangeMessage(
         GridDhtPartitionExchangeId exchId,
         GridDhtPartitionsFullMessage partsMsg,
-        Map<Integer, Map<Integer, List<UUID>>> assignmentChange) {
+        Map<Integer, Map<Integer, List<UUID>>> assignmentChange
+    ) {
+        super(IgniteUuid.randomUuid());
+
         this.exchId = exchId;
         this.partsMsg = partsMsg;
         this.assignmentChange = assignmentChange;

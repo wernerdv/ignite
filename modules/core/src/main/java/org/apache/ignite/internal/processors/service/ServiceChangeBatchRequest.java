@@ -25,6 +25,7 @@ import org.apache.ignite.internal.util.tostring.GridToStringExclude;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,6 +50,8 @@ public class ServiceChangeBatchRequest extends DiscoveryCustomMessage {
      * @param reqs Change requests.
      */
     public ServiceChangeBatchRequest(Collection<ServiceChangeAbstractRequest> reqs) {
+        super(IgniteUuid.randomUuid());
+
         assert !F.isEmpty(reqs);
 
         this.reqs = reqs;

@@ -81,7 +81,12 @@ public abstract class DiscoveryCustomMessage implements DiscoverySpiCustomMessag
 
     /** Constructor. */
     protected DiscoveryCustomMessage() {
-        id = IgniteUuid.randomUuid();
+        // No-op.
+    }
+
+    /** @param id Message ID. */
+    protected DiscoveryCustomMessage(IgniteUuid id) {
+        this.id = id;
     }
 
     /** @return Unique custom message ID. */

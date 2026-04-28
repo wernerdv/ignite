@@ -65,6 +65,8 @@ public abstract class WalStateAbstractMessage extends DiscoveryCustomMessage imp
      * @param grpDepId Group deployment ID.
      */
     protected WalStateAbstractMessage(UUID opId, int grpId, IgniteUuid grpDepId) {
+        super(IgniteUuid.randomUuid());
+
         this.opId = opId;
         this.grpId = grpId;
         this.grpDepId = grpDepId;

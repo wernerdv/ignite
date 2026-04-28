@@ -25,6 +25,7 @@ import org.apache.ignite.internal.managers.discovery.GridDiscoveryManager;
 import org.apache.ignite.internal.processors.affinity.AffinityTopologyVersion;
 import org.apache.ignite.internal.util.distributed.DistributedProcess.DistributedProcessType;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.Message;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +66,8 @@ public class InitMessage<I extends Message> extends DiscoveryCustomMessage {
      * @param req Request.
      */
     public InitMessage(UUID procId, DistributedProcessType type, I req, boolean waitClnRes) {
+        super(IgniteUuid.randomUuid());
+
         this.procId = procId;
         this.type = type.ordinal();
         this.req = req;

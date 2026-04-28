@@ -20,6 +20,7 @@ package org.apache.ignite.internal.processors.marshaller;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,6 +42,8 @@ public class MappingAcceptedMessage extends DiscoveryCustomMessage {
      * @param item Item.
      */
     MappingAcceptedMessage(MarshallerMappingItem item) {
+        super(IgniteUuid.randomUuid());
+
         this.item = item;
     }
 

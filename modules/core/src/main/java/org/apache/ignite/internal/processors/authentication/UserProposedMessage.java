@@ -22,6 +22,7 @@ import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.managers.discovery.DiscoveryServerOnlyCustomMessage;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -46,6 +47,8 @@ public class UserProposedMessage extends DiscoveryServerOnlyCustomMessage {
      * @param op User action.
      */
     UserProposedMessage(UserManagementOperation op) {
+        super(IgniteUuid.randomUuid());
+
         assert op != null;
 
         this.op = op;

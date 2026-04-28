@@ -28,6 +28,7 @@ import org.apache.ignite.internal.util.tostring.GridToStringExclude;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -55,6 +56,8 @@ public class DynamicCacheChangeBatch extends DiscoveryCustomMessage {
      * @param reqs Requests.
      */
     public DynamicCacheChangeBatch(Collection<DynamicCacheChangeRequest> reqs) {
+        super(IgniteUuid.randomUuid());
+
         assert !F.isEmpty(reqs) : reqs;
 
         this.reqs = reqs;

@@ -22,6 +22,7 @@ import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.tostring.GridToStringInclude;
 import org.apache.ignite.internal.util.typedef.internal.S;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.plugin.extensions.communication.MessageFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,6 +50,8 @@ public class TcpConnectionRequestDiscoveryMessage extends DiscoveryCustomMessage
      * @param connIdx Connection index.
      */
     public TcpConnectionRequestDiscoveryMessage(UUID receiverNodeId, int connIdx) {
+        super(IgniteUuid.randomUuid());
+
         this.receiverNodeId = receiverNodeId;
         this.connIdx = connIdx;
     }

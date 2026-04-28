@@ -27,6 +27,7 @@ import org.apache.ignite.internal.managers.communication.ErrorMessage;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
 import org.apache.ignite.internal.util.typedef.internal.S;
 import org.apache.ignite.internal.util.typedef.internal.U;
+import org.apache.ignite.lang.IgniteUuid;
 import org.apache.ignite.marshaller.Marshaller;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,6 +111,8 @@ public final class MetadataUpdateProposedMessage extends DiscoveryCustomMessage 
      * @param origNodeId ID of node requested update.
      */
     public MetadataUpdateProposedMessage(BinaryMetadata metadata, UUID origNodeId) {
+        super(IgniteUuid.randomUuid());
+
         assert origNodeId != null;
         assert metadata != null;
 

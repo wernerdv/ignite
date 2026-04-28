@@ -20,6 +20,7 @@ package org.apache.ignite.internal.processors.continuous;
 import java.util.UUID;
 import org.apache.ignite.internal.Order;
 import org.apache.ignite.internal.managers.discovery.DiscoveryCustomMessage;
+import org.apache.ignite.lang.IgniteUuid;
 
 /**
  *
@@ -38,6 +39,8 @@ public abstract class AbstractContinuousMessage extends DiscoveryCustomMessage {
      * @param id Id.
      */
     protected AbstractContinuousMessage(UUID id) {
+        super(IgniteUuid.randomUuid());
+
         routineId = id;
     }
 
