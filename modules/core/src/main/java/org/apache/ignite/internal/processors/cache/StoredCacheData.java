@@ -55,7 +55,7 @@ public class StoredCacheData implements Serializable, CdcCacheEvent, Marshallabl
 
     /** Serialized {@link #ccfg}. */
     @Order(0)
-    byte[] ccfgBytes;
+    transient byte[] ccfgBytes;
 
     /** Query entities. */
     @GridToStringInclude
@@ -63,7 +63,7 @@ public class StoredCacheData implements Serializable, CdcCacheEvent, Marshallabl
 
     /** Serialized {@link #qryEntities}. */
     @Order(1)
-    byte[] qryEntitiesBytes;
+    transient byte[] qryEntitiesBytes;
 
     /** SQL flag - {@code true} if cache was created with {@code CREATE TABLE}. */
     @Order(2)
@@ -235,10 +235,16 @@ public class StoredCacheData implements Serializable, CdcCacheEvent, Marshallabl
 
     /** {@inheritDoc} */
     @Override public void finishUnmarshal(Marshaller marsh, ClassLoader clsLdr) throws IgniteCheckedException {
-        if (ccfgBytes != null)
+        if (ccfgBytes != null) {
             ccfg = U.unmarshal(marsh, ccfgBytes, clsLdr);
 
-        if (qryEntitiesBytes != null)
+            ccfgBytes = null;
+        }
+
+        if (qryEntitiesBytes != null) {
             qryEntities = U.unmarshal(marsh, qryEntitiesBytes, clsLdr);
+
+            qryEntitiesBytes = null;
+        }
     }
 }
