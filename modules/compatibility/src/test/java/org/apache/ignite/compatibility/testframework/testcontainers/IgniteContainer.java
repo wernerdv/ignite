@@ -90,7 +90,7 @@ public class IgniteContainer extends GenericContainer<IgniteContainer> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IgniteContainer.class);
 
     /** Ignite root directory in container. */
-    private static final String ROOT_DIR_PATH = "/opt/ignite/apache-ignite/";
+    private static final String ROOT_DIR_PATH = System.getProperty("ru.container.root.dir", "/opt/ignite/apache-ignite/");
 
     /** Ignite libs directory in container. */
     private static final String LIBS_DIR_PATH = ROOT_DIR_PATH + "libs/";
@@ -103,6 +103,18 @@ public class IgniteContainer extends GenericContainer<IgniteContainer> {
 
     /** Common config path in container. */
     private static final String COMMON_CFG_PATH = ROOT_DIR_PATH + "config/common-test-config.xml";
+
+    /** Security plugin resources directory in container (SSL keystores + RBAC data). */
+    private static final String SEC_DIR_PATH = ROOT_DIR_PATH + "config/security/";
+
+    /** Control utility login (must match user with role SERVER in default-security-data.json). */
+    private static final String SEC_NODE_LOGIN = "serverNode";
+
+    /** Control utility password. */
+    private static final String SEC_NODE_PASSWORD = "Default-password-1";
+
+    /** KeyStore/TrustStore password. */
+    private static final String SEC_KEYSTORE_PASSWORD = "123456";
 
     /** */
     private static final Pattern CLUSTER_STATE_PATTERN = Pattern.compile("Cluster state: (ACTIVE|INACTIVE)");
@@ -163,6 +175,10 @@ public class IgniteContainer extends GenericContainer<IgniteContainer> {
         int commHostPort = COMM_HOST_PORT_BASE + idx;
 
         withEnv("CONFIG_URI", "file://" + CFG_PATH);
+        // bin/ignite.sh-based images (e.g. DataGrid) do not read CONFIG_URI; their entrypoint resolves the
+        // config path from the DEFAULT_CONFIG env var instead. Point it at the same test config so both
+        // entrypoint styles load it. run.sh-based (vanilla) images ignore DEFAULT_CONFIG, so this is harmless.
+        withEnv("DEFAULT_CONFIG", CFG_PATH);
         withEnv("IGNITE_QUIET", "false");
         withEnv("IGNITE_WORK_DIR", workDirPath);
         withEnv("IGNITE_LOCAL_HOST", "0.0.0.0");
@@ -203,6 +219,13 @@ public class IgniteContainer extends GenericContainer<IgniteContainer> {
         withCopyFileToContainer(forClasspathResource("docker/common-test-config.xml"), COMMON_CFG_PATH);
         withCopyFileToContainer(forClasspathResource("docker/test-config.xml"), CFG_PATH);
         withCopyFileToContainer(forHostPath(testClassesJar().getAbsolutePath()), LIBS_DIR_PATH + "test-classes.jar");
+
+        // Security plugin resources (SSL keystores + initial RBAC data), referenced by
+        // SecurityPluginConfiguration in test-config.xml.
+        withCopyFileToContainer(forClasspathResource("docker/security/server.jks"), SEC_DIR_PATH + "server.jks");
+        withCopyFileToContainer(forClasspathResource("docker/security/truststore.jks"), SEC_DIR_PATH + "truststore.jks");
+        withCopyFileToContainer(forClasspathResource("docker/security/default-security-data.json"),
+            SEC_DIR_PATH + "default-security-data.json");
 
         withNetwork(net);
         withNetworkAliases(hostname);
@@ -360,11 +383,26 @@ public class IgniteContainer extends GenericContainer<IgniteContainer> {
 
     /** */
     private String execControl(String... cmd) {
-        String[] fullCmd = new String[cmd.length + 1];
+        // The cluster runs with the security plugin: control.sh must authenticate and present a client
+        // certificate whose DN matches the user's distinguishedName (serverNode -> CN=server).
+        String[] fullCmd = new String[cmd.length + 13];
+        int p = 0;
 
-        fullCmd[0] = ROOT_DIR_PATH + "bin/control.sh";
+        fullCmd[p++] = ROOT_DIR_PATH + "bin/control.sh";
+        fullCmd[p++] = "--user";
+        fullCmd[p++] = SEC_NODE_LOGIN;
+        fullCmd[p++] = "--password";
+        fullCmd[p++] = SEC_NODE_PASSWORD;
+        fullCmd[p++] = "--keystore";
+        fullCmd[p++] = SEC_DIR_PATH + "server.jks";
+        fullCmd[p++] = "--keystore-password";
+        fullCmd[p++] = SEC_KEYSTORE_PASSWORD;
+        fullCmd[p++] = "--truststore";
+        fullCmd[p++] = SEC_DIR_PATH + "truststore.jks";
+        fullCmd[p++] = "--truststore-password";
+        fullCmd[p++] = SEC_KEYSTORE_PASSWORD;
 
-        System.arraycopy(cmd, 0, fullCmd, 1, cmd.length);
+        System.arraycopy(cmd, 0, fullCmd, p, cmd.length);
 
         ExecResult result;
 

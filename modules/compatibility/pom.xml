@@ -146,6 +146,17 @@
             <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <!-- Binary files (SSL keystores) must not be processed by resource filtering. -->
+                    <exclude>docker/security/**</exclude>
+                </excludes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>docker/security/**</include>
+                </includes>
             </testResource>
         </testResources>
 

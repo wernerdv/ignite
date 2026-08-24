@@ -19,6 +19,7 @@ package org.apache.ignite.compatibility.ru;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import org.apache.ignite.cache.CacheAtomicityMode;
 import org.apache.ignite.client.ClientCache;
 import org.apache.ignite.client.ClientCacheConfiguration;
 import org.apache.ignite.client.IgniteClient;
+import org.apache.ignite.client.SslMode;
 import org.apache.ignite.compatibility.testframework.testcontainers.IgniteClusterContainer;
 import org.apache.ignite.compatibility.testframework.testcontainers.IgniteContainer;
 import org.apache.ignite.configuration.ClientConfiguration;
@@ -71,6 +73,9 @@ public class IgniteRebalanceOnUpgradeTest extends GridCommonAbstractTest {
 
     /** Cache name. */
     private static final String CACHE_NAME = "ru-test-cache";
+
+    /** KeyStore/TrustStore password. */
+    private static final String SEC_KEYSTORE_PASSWORD = "123456";
 
     /** Local work directory. */
     private static final File LOCAL_WORK_DIR = new File(LOCAL_WORK_DIR_PATH);
@@ -157,7 +162,7 @@ public class IgniteRebalanceOnUpgradeTest extends GridCommonAbstractTest {
     }
 
     /** Verify data via thin client connected to upgraded Docker nodes. */
-    private void verifyViaDockerNodes(IgniteClusterContainer cluster) {
+    private void verifyViaDockerNodes(IgniteClusterContainer cluster) throws URISyntaxException {
         IgniteContainer con = cluster.containers().get(0);
 
         con.checkNodeCount(cluster.containers().size());
@@ -297,9 +302,35 @@ public class IgniteRebalanceOnUpgradeTest extends GridCommonAbstractTest {
     /** */
     private IgniteClient client(String addr) {
         if (client == null)
-            client = Ignition.startClient(new ClientConfiguration().setAddresses(addr));
+            client = Ignition.startClient(new ClientConfiguration()
+                .setAddresses(addr)
+                // The cluster runs with the security plugin: SSL (mTLS) + user authentication required.
+                // The client certificate DN must match the user's distinguishedName (client -> CN=client).
+                // Store types are set explicitly: otherwise the thin client falls back to the
+                // javax.net.ssl.* system properties (e.g. -Djavax.net.ssl.trustStoreType=KeychainStore
+                // from JAVA_TOOL_OPTIONS on macOS), which breaks keystore loading.
+                .setSslMode(SslMode.REQUIRED)
+                .setSslClientCertificateKeyStorePath(SEC_RES_DIR() + "client.jks")
+                .setSslClientCertificateKeyStoreType("PKCS12")
+                .setSslClientCertificateKeyStorePassword(SEC_KEYSTORE_PASSWORD)
+                .setSslTrustCertificateKeyStorePath(SEC_RES_DIR() + "truststore.jks")
+                .setSslTrustCertificateKeyStoreType("PKCS12")
+                .setSslTrustCertificateKeyStorePassword(SEC_KEYSTORE_PASSWORD)
+                .setUserName("client")
+                .setUserPassword("Default-password-1"));
 
         return client;
+    }
+
+    /** @return Path (with trailing separator) to the thin client's security resources on the host. */
+    private static String SEC_RES_DIR() {
+        try {
+            return new File(IgniteRebalanceOnUpgradeTest.class.getResource("/docker/security/").toURI())
+                .getAbsolutePath() + File.separator;
+        }
+        catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /** */

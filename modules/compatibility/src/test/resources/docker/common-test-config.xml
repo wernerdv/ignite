@@ -62,5 +62,24 @@
                 <property name="localPort" value="47100"/>
             </bean>
         </property>
+        <property name="pluginProviders">
+            <!-- Список, а не одиночный bean: дочерние конфиги (test-config.xml) используют
+                 <list merge="true">, что работает только когда оба значения — ManagedList. -->
+            <list>
+                <bean class="com.sbt.security.ignite.core.SecurityPluginProvider">
+                    <constructor-arg>
+                        <bean class="com.sbt.security.ignite.core.SecurityPluginConfiguration">
+                            <property name="nodeLogin" value="serverNode"/>
+                            <property name="nodePassword" value="Default-password-1"/>
+                            <property name="initialSecurityDataPath" value="/opt/ignite/config/security/default-security-data.json"/>
+                            <property name="selfKeyStorePath" value="/opt/ignite/config/security/server.jks"/>
+                            <property name="selfKeyStorePassword" value="123456"/>
+                            <property name="trustStorePath" value="/opt/ignite/config/security/truststore.jks"/>
+                            <property name="trustStorePassword" value="123456"/>
+                        </bean>
+                    </constructor-arg>
+                </bean>
+            </list>
+        </property>
     </bean>
 </beans>
