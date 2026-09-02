@@ -25,10 +25,15 @@
     <import resource="common-test-config.xml"/>
 
     <bean id="grid.cfg" parent="grid.cfg.base">
+        <!-- merge=true объединяет с pluginProviders родителя (SecurityPluginProvider из
+             common-test-config.xml), т.к. по умолчанию дочернее значение полностью
+             заменяет родительское. В итоге source-ноды получают [Security, TestCompatibility]. -->
         <property name="pluginProviders">
-            <bean class="org.apache.ignite.compatibility.testframework.plugins.TestCompatibilityPluginProvider">
-                <constructor-arg value="true"/>
-            </bean>
+            <list merge="true">
+                <bean class="org.apache.ignite.compatibility.testframework.plugins.TestCompatibilityPluginProvider">
+                    <constructor-arg value="true"/>
+                </bean>
+            </list>
         </property>
     </bean>
 </beans>

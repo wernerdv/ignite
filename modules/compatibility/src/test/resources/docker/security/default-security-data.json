@@ -1,0 +1,98 @@
+{
+  "roles": [
+    {
+      "name": "SERVER",
+      "permissions": {
+        "systemPermissions": [
+          "ADMIN_OPS",
+          "CACHE_DESTROY",
+          "ADMIN_SNAPSHOT",
+          "CACHE_CREATE",
+          "JOIN_AS_SERVER",
+          "ADMIN_CLUSTER_STATE",
+          "ADMIN_ROLLING_UPGRADE"
+        ],
+        "cachePermissions": {
+          "*": [
+            "CACHE_REMOVE",
+            "CACHE_READ",
+            "CACHE_PUT"
+          ]
+        },
+        "taskPermissions": {
+          "*": [
+            "TASK_EXECUTE",
+            "TASK_CANCEL"
+          ]
+        },
+        "servicePermissions": {
+          "*": [
+            "SERVICE_CANCEL",
+            "SERVICE_DEPLOY",
+            "SERVICE_INVOKE"
+          ]
+        }
+      },
+      "conflictPermissions": { }
+    },
+    {
+      "name": "CLIENT",
+      "permissions": {
+        "systemPermissions": [
+          "CACHE_DESTROY",
+          "CACHE_CREATE"
+        ],
+        "cachePermissions": {
+          "*": [
+            "CACHE_REMOVE",
+            "CACHE_READ",
+            "CACHE_PUT"
+          ]
+        },
+        "servicePermissions": {
+          "*": [
+            "SERVICE_CANCEL",
+            "SERVICE_DEPLOY",
+            "SERVICE_INVOKE"
+          ]
+        }
+      },
+      "conflictPermissions": {
+        "systemPermissions": [
+          "ADMIN_OPS",
+          "JOIN_AS_SERVER"
+        ],
+        "taskPermissions": {
+          "*": [
+            "TASK_EXECUTE",
+            "TASK_CANCEL"
+          ]
+        }
+      }
+    }
+  ],
+  "users": [
+    {
+      "login": "client",
+      "distinguishedName": "CN=client",
+      "secret": {
+        "key": "1a17c1a9a57a38fecfaaa88140591da8f48bf8c6b4914edcb0734cc9c201ecff6225241b8e5eb102dc9e5be4df9673be20245bef31824b69c75e97cd2ae49c3b",
+        "salt": "6ec4fd3600067dbaf7fe15a754889379c92bee3f500f7d936dffd293d6d8fff8"
+      },
+      "roles": [
+        "CLIENT"
+      ]
+    },
+    {
+      "login": "serverNode",
+      "distinguishedName": "CN=server",
+      "secret": {
+        "key": "ad1dfc0ea2fdd2eed905dc891e67e745bb38d535212d605b9073732d4f0a6c17861fa207d4a776dd33bda8805985112a1e9d0ae61c3e3521d8f7cb35938e55b4",
+        "salt": "301cbf053c15fdd66a6a3ad07c5a3198ba0fffb51960fde78d75054f0efd2817"
+      },
+      "roles": [
+        "SERVER"
+      ]
+    }
+  ]
+}
